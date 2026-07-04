@@ -8,6 +8,7 @@ from app.modulos.empresas.models import Empresa
 
 from app.modulos.apis.growatt.router import router as growatt_router
 from app.modulos.apis.sungrow.router import router as sungrow_router
+from app.modulos.apis.solis.router import router as solis_router
 
 app = FastAPI(title="AppSolar Monitor")
 
@@ -20,6 +21,7 @@ templates = Jinja2Templates(directory="app/templates")
 # Incluindo as rotas das APIs
 app.include_router(growatt_router)
 app.include_router(sungrow_router) # NOVO
+app.include_router(solis_router)
 
 @app.get("/")
 async def serve_dashboard(request: Request):

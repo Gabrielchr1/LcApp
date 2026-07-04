@@ -106,7 +106,7 @@
 {% block extra_js %}
 <script>
     // Pegamos o ID e a MARCA que o FastAPI injetou no HTML
-    const plantId = {{ plant_id }};
+    const plantId = "{{ plant_id }}";
     const marca = "{{ marca }}";
 
     async function carregarDataloggers() {

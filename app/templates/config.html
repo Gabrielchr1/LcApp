@@ -1,46 +1,82 @@
 {% extends "base.html" %}
 
-{% block title %}Configurações Sungrow - AppSolar{% endblock %}
+{% block title %}Configurações de API - AppSolar{% endblock %}
 
 {% block extra_css %}
 <style>
-    .config-container {
-        max-width: 600px;
+    /* Container principal em Grid */
+    .config-wrapper {
+        max-width: 1200px;
         margin: 20px auto;
-        background: #ffffff;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        padding: 0 20px;
     }
 
+    .page-title {
+        text-align: center;
+        margin-bottom: 40px;
+        color: #1E293B;
+    }
+
+    .page-title p {
+        color: #64748B;
+        font-size: 0.95rem;
+    }
+
+    .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        align-items: start; /* Impede que os cards estiquem se um for maior que o outro */
+    }
+
+    /* O Card Flutuante */
+    .config-card {
+        background: #ffffff;
+        padding: 30px 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        border: 1px solid #F1F5F9;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .config-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    /* Cabeçalhos personalizados por marca */
     .config-header {
-        border-bottom: 2px solid #ea580c;
-        padding-bottom: 10px;
+        padding-bottom: 12px;
         margin-bottom: 20px;
     }
+
+    .header-sungrow { border-bottom: 2px solid #ea580c; }
+    .header-solis { border-bottom: 2px solid #3B82F6; }
 
     .config-header h2 {
         color: #1E293B;
         margin: 0 0 5px 0;
-        font-size: 1.5rem;
+        font-size: 1.3rem;
     }
 
     .config-header p {
         color: #64748B;
         margin: 0;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
+        line-height: 1.4;
     }
 
+    /* Formulários e Inputs */
     .form-group {
         margin-bottom: 15px;
     }
 
     .form-group label {
         display: block;
-        margin-bottom: 5px;
+        margin-bottom: 6px;
         font-weight: 600;
         color: #475569;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
 
     .form-control {
@@ -49,122 +85,153 @@
         border: 1px solid #CBD5E1;
         border-radius: 6px;
         box-sizing: border-box;
-        font-size: 0.95rem;
-        transition: border-color 0.2s;
+        font-size: 0.9rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
     }
 
     .form-control:focus {
         outline: none;
-        border-color: #ea580c;
-        box-shadow: 0 0 0 2px rgba(234, 88, 12, 0.1);
+        border-color: #94A3B8;
+        box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.1);
     }
 
+    .input-sungrow:focus { border-color: #ea580c; box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
+    .input-solis:focus { border-color: #3B82F6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+
+    /* Botões */
     .btn-submit {
-        background-color: #ea580c;
         color: white;
         padding: 12px 20px;
         border: none;
         border-radius: 6px;
         cursor: pointer;
-        font-size: 1rem;
+        font-size: 0.95rem;
         width: 100%;
-        font-weight: bold;
-        transition: background-color 0.2s;
-        margin-top: 10px;
+        font-weight: 600;
+        transition: all 0.2s;
+        margin-top: 15px;
     }
 
-    .btn-submit:hover {
-        background-color: #c2410c;
-    }
+    .btn-sungrow { background-color: #ea580c; }
+    .btn-sungrow:hover { background-color: #c2410c; }
+    
+    .btn-solis { background-color: #3B82F6; }
+    .btn-solis:hover { background-color: #2563EB; }
 
     .btn-submit:disabled {
-        background-color: #fdba74;
+        opacity: 0.6;
         cursor: not-allowed;
     }
 
+    /* Feedbacks e Resultados */
     .result-box {
         margin-top: 20px;
-        padding: 15px;
+        padding: 12px 15px;
         border-radius: 6px;
         display: none;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
+        line-height: 1.4;
     }
 
-    .result-box.success {
-        background-color: #F0FDF4;
-        color: #166534;
-        border: 1px solid #BBF7D0;
-    }
-
-    .result-box.error {
-        background-color: #FEF2F2;
-        color: #991B1B;
-        border: 1px solid #FECACA;
-    }
+    .result-box.success { background-color: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; }
+    .result-box.error { background-color: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
 
     .token-display {
         font-family: monospace;
-        background: #ffffff;
-        padding: 10px;
+        background: #F8FAFC;
+        padding: 8px 10px;
         word-break: break-all;
-        margin-top: 10px;
+        margin-top: 8px;
         border-radius: 4px;
         border: 1px solid #E2E8F0;
-        color: #1E293B;
+        color: #0F172A;
+        font-size: 0.85rem;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="config-container">
-    <div class="config-header">
-        <h2>Credenciais iSolarCloud (Sungrow)</h2>
-        <p>Gere seu token de acesso automaticamente autenticando-se na API.</p>
+<div class="config-wrapper">
+    
+    <div class="page-title">
+        <h2>Painel de Integrações</h2>
+        <p>Gerencie o acesso às APIs das fabricantes para sincronização de dados</p>
     </div>
 
-    <form id="sungrowConfigForm">
-        <div class="form-group">
-            <label for="appKey">App Key (iSolarCloud API):</label>
-            <input type="text" id="appKey" class="form-control" required placeholder="Ex: sua_app_key_aqui">
+    <div class="cards-grid">
+        
+        <!-- CARD: SUNGROW -->
+        <div class="config-card">
+            <div class="config-header header-sungrow">
+                <h2>iSolarCloud (Sungrow)</h2>
+                <p>Insira suas credenciais para gerar e salvar o token de acesso automaticamente.</p>
+            </div>
+
+            <form id="sungrowConfigForm">
+                <div class="form-group">
+                    <label for="appKey">App Key:</label>
+                    <input type="text" id="appKey" class="form-control input-sungrow" required placeholder="Ex: sua_app_key_aqui">
+                </div>
+                <div class="form-group">
+                    <label for="secretKey">Secret Key:</label>
+                    <input type="text" id="secretKey" class="form-control input-sungrow" required placeholder="Ex: sua_secret_key_aqui">
+                </div>
+                <div class="form-group">
+                    <label for="userAccount">E-mail de Login:</label>
+                    <input type="email" id="userAccount" class="form-control input-sungrow" required placeholder="exemplo@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="userPassword">Senha:</label>
+                    <input type="password" id="userPassword" class="form-control input-sungrow" required placeholder="Sua senha da iSolarCloud">
+                </div>
+                <button type="submit" id="btnTestar" class="btn-submit btn-sungrow">Autenticar e Salvar</button>
+            </form>
+            <div id="resultMessage" class="result-box"></div>
         </div>
 
-        <div class="form-group">
-            <label for="secretKey">Secret Key (iSolarCloud API):</label>
-            <input type="text" id="secretKey" class="form-control" required placeholder="Ex: sua_secret_key_aqui">
+        <!-- CARD: SOLIS -->
+        <div class="config-card">
+            <div class="config-header header-solis">
+                <h2>SolisCloud (Solis)</h2>
+                <p>Insira a Key ID e Key Secret geradas no painel da Solis.</p>
+            </div>
+
+            <form id="solisConfigForm">
+                <div class="form-group">
+                    <label for="solisKeyId">Key ID:</label>
+                    <input type="text" id="solisKeyId" class="form-control input-solis" required placeholder="Ex: 1300386381677197719">
+                </div>
+                <div class="form-group">
+                    <label for="solisKeySecret">Key Secret:</label>
+                    <input type="password" id="solisKeySecret" class="form-control input-solis" required placeholder="Sua Key Secret da Solis">
+                </div>
+                <button type="submit" id="btnTestarSolis" class="btn-submit btn-solis">Salvar Credenciais Solis</button>
+            </form>
+            <div id="resultMessageSolis" class="result-box"></div>
         </div>
 
-        <div class="form-group">
-            <label for="userAccount">E-mail de Login:</label>
-            <input type="email" id="userAccount" class="form-control" required placeholder="exemplo@email.com">
-        </div>
+        <!-- Futuras marcas podem ser adicionadas aqui como novos <div class="config-card"> -->
 
-        <div class="form-group">
-            <label for="userPassword">Senha:</label>
-            <input type="password" id="userPassword" class="form-control" required placeholder="Sua senha da iSolarCloud">
-        </div>
-
-        <button type="submit" id="btnTestar" class="btn-submit">Gerar Token de Autenticação</button>
-    </form>
-
-    <div id="resultMessage" class="result-box"></div>
+    </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
+    // ==========================================
+    // LÓGICA DO FORMULÁRIO DA SUNGROW
+    // ==========================================
     document.getElementById('sungrowConfigForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         
         const btn = document.getElementById('btnTestar');
         const resultBox = document.getElementById('resultMessage');
         
-        // Estado de Loading
         btn.textContent = "Autenticando aguarde...";
         btn.disabled = true;
         resultBox.style.display = "none";
-        resultBox.className = "result-box"; // Limpa classes antigas
+        resultBox.className = "result-box";
 
-        // Monta o payload
         const payload = {
             app_key: document.getElementById('appKey').value.trim(),
             secret_key: document.getElementById('secretKey').value.trim(),
@@ -187,9 +254,6 @@
                     <strong>✅ ${data.message}</strong><br>
                     Seu Token de acesso é:
                     <div class="token-display">${data.token}</div>
-                    <small style="display:block; margin-top:10px; color:#15803D;">
-                        <em>Em breve, este token será persistido no banco de dados automaticamente (PostgreSQL).</em>
-                    </small>
                 `;
             } else {
                 resultBox.classList.add('error');
@@ -200,9 +264,55 @@
             resultBox.classList.add('error');
             resultBox.innerHTML = `<strong>❌ Falha na comunicação com o servidor.</strong> Verifique o console.`;
         } finally {
-            // Restaura o botão
             resultBox.style.display = "block";
-            btn.textContent = "Gerar Token de Autenticação";
+            btn.textContent = "Autenticar e Salvar";
+            btn.disabled = false;
+        }
+    });
+
+    // ==========================================
+    // LÓGICA DO FORMULÁRIO DA SOLIS
+    // ==========================================
+    document.getElementById('solisConfigForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('btnTestarSolis');
+        const resultBox = document.getElementById('resultMessageSolis');
+        
+        btn.textContent = "Salvando credenciais...";
+        btn.disabled = true;
+        resultBox.style.display = "none";
+        resultBox.className = "result-box"; 
+
+        const payload = {
+            api_url: "https://www.soliscloud.com:13333",
+            key_id: document.getElementById('solisKeyId').value.trim(),
+            key_secret: document.getElementById('solisKeySecret').value.trim()
+        };
+
+        try {
+            const response = await fetch('/api/solis/configurar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                resultBox.classList.add('success');
+                resultBox.innerHTML = `<strong>✅ ${data.message}</strong>`;
+            } else {
+                resultBox.classList.add('error');
+                resultBox.innerHTML = `<strong>❌ Erro:</strong> ${data.detail || data.message || 'Falha ao salvar.'}`;
+            }
+        } catch (error) {
+            console.error("Erro na requisição Solis:", error);
+            resultBox.classList.add('error');
+            resultBox.innerHTML = `<strong>❌ Falha na comunicação com o servidor.</strong>`;
+        } finally {
+            resultBox.style.display = "block";
+            btn.textContent = "Salvar Credenciais Solis";
             btn.disabled = false;
         }
     });

@@ -77,7 +77,7 @@ function renderizarPlantas(plantas) {
 
             <div class="planta-acao">
                 <!-- Adicionado o parâmetro da marca no clique -->
-                <button class="btn-acao" onclick="abrirDetalhesPlanta(${planta.plant_id}, '${planta.marca}')">
+                <button class="btn-acao" onclick="abrirDetalhesPlanta('${planta.plant_id}', '${planta.marca}')">
                     Equipamentos
                 </button>
             </div>

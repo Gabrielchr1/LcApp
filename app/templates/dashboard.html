@@ -72,6 +72,7 @@
             <button class="btn-filtro active" onclick="aplicarFiltro('Todas', this)">Todas</button>
             <button class="btn-filtro" onclick="aplicarFiltro('Growatt', this)">Growatt</button>
             <button class="btn-filtro" onclick="aplicarFiltro('Sungrow', this)">Sungrow</button>
+            <button class="btn-filtro" onclick="aplicarFiltro('Solis', this)">Solis</button>
         </div>
 
         <button class="btn-atualizar" onclick="carregarUsinas()">🔄 Atualizar</button>
@@ -118,14 +119,15 @@
     let todasAsUsinasGlobal = [];
 
     // Função principal que busca dados das DUAS APIs independentemente
-    async function carregarUsinas() {
+async function carregarUsinas() {
         const container = document.getElementById('container-plantas');
-        container.innerHTML = '<div class="loading-state"><p>Buscando dados nas APIs da Growatt e Sungrow...</p></div>';
+        container.innerHTML = '<div class="loading-state"><p>Buscando dados nas APIs (Growatt, Sungrow, Solis)...</p></div>';
         
         // Limpa a lista a cada atualização
         todasAsUsinasGlobal = [];
         let errosGrowatt = null;
         let errosSungrow = null;
+        let errosSolis = null;
 
         // 1. Busca usinas da Growatt
         try {
@@ -162,18 +164,35 @@
             console.error("Falha Sungrow:", error);
         }
 
-        // 3. Renderiza o resultado
+        // 3. Busca usinas da Solis
+        try {
+            const resSolis = await fetch('/api/solis/plants');
+            if (!resSolis.ok) {
+                const errData = await resSolis.json().catch(() => ({}));
+                throw new Error(errData.detail || `Erro HTTP ${resSolis.status}`);
+            }
+            const dataSolis = await resSolis.json();
+            if (dataSolis.plants) {
+                // O service.py da Solis já inclui a propriedade "marca": "Solis"
+                todasAsUsinasGlobal.push(...dataSolis.plants);
+            }
+        } catch (error) {
+            errosSolis = `Solis: ${error.message}`;
+            console.error("Falha Solis:", error);
+        }
+
+        // 4. Renderiza o resultado
         if (todasAsUsinasGlobal.length > 0) {
             // Se pelo menos uma API funcionou, aplicamos o filtro ativo (por padrão "Todas")
             const botaoAtivo = document.querySelector('.btn-filtro.active') || document.querySelector('.btn-filtro');
             aplicarFiltro(botaoAtivo.textContent.trim(), botaoAtivo);
 
-            if (errosGrowatt || errosSungrow) {
-                console.warn("Algumas APIs falharam:", errosGrowatt, errosSungrow);
+            if (errosGrowatt || errosSungrow || errosSolis) {
+                console.warn("Algumas APIs falharam:", errosGrowatt, errosSungrow, errosSolis);
             }
         } else {
-            // Se as DUAS APIs falharam, mostramos a tela de erro fatal
-            const msgErro = [errosGrowatt, errosSungrow].filter(Boolean).join('<br><br>');
+            // Se TODAS as APIs falharam, mostramos a tela de erro fatal unificada
+            const msgErro = [errosGrowatt, errosSungrow, errosSolis].filter(Boolean).join('<br><br>');
             container.innerHTML = `
                 <div class="error-state">
                     <h3>⚠️ Falha de Comunicação Geral</h3>
