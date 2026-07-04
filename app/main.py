@@ -27,15 +27,22 @@ async def serve_dashboard(request: Request):
         request=request, name="dashboard.html", context={"request": request}
     )
 
-# NOVA ROTA: Página de Detalhes da Usina
-@app.get("/dashboard/plantas/{plant_id}")
-async def serve_detalhes_planta(request: Request, plant_id: int):
-    # Passamos o plant_id para o HTML, assim o JS sabe de qual usina buscar os dados
+# NOVA ROTA: Página de Detalhes da Usina com a Marca dinâmica
+@app.get("/dashboard/plantas/{marca}/{plant_id}")
+async def serve_detalhes_planta(request: Request, marca: str, plant_id: int):
+    # Passamos o plant_id e a marca para o HTML, assim o JS sabe onde buscar
     return templates.TemplateResponse(
         request=request, 
         name="detalhes.html", 
-        context={"request": request, "plant_id": plant_id}
+        context={
+            "request": request, 
+            "plant_id": plant_id,
+            "marca": marca.lower() # Garante que seja 'growatt' ou 'sungrow' minúsculo
+        }
     )
+
+
+
 
 # main.py
 

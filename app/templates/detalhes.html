@@ -88,7 +88,8 @@
 <a href="/" class="btn-voltar">← Voltar para Usinas</a>
 
 <div class="dashboard-header">
-    <h2>Equipamentos da Usina (ID: {{ plant_id }})</h2>
+    <!-- Adicionada a marca capitalizada no título -->
+    <h2>Equipamentos da Usina ({{ marca | capitalize }} - ID: {{ plant_id }})</h2>
     <div class="dashboard-actions">
         <button class="btn-atualizar" onclick="carregarDataloggers()">🔄 Atualizar Equipamentos</button>
     </div>
@@ -104,19 +105,21 @@
 
 {% block extra_js %}
 <script>
-    // Pegamos o ID da usina que o FastAPI injetou no HTML
+    // Pegamos o ID e a MARCA que o FastAPI injetou no HTML
     const plantId = {{ plant_id }};
+    const marca = "{{ marca }}";
 
     async function carregarDataloggers() {
         const container = document.getElementById('container-dataloggers');
         container.innerHTML = '<div class="loading-state"><p>Buscando comunicação com os inversores...</p></div>';
 
         try {
-            // Chamamos a rota de dataloggers que já criamos lá no início do projeto
-            const response = await fetch(`/api/growatt/dataloggers/${plantId}`);
+            // A MAGIA ACONTECE AQUI: A URL agora usa a variável ${marca} dinamicamente!
+            const response = await fetch(`/api/${marca}/dataloggers/${plantId}`);
             
             if (!response.ok) {
-                throw new Error("Falha ao buscar os dispositivos");
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData.detail || "Falha ao buscar os dispositivos");
             }
 
             const data = await response.json();
@@ -124,12 +127,12 @@
             if (data.dataloggers && data.dataloggers.length > 0) {
                 renderizarTabela(data.dataloggers);
             } else {
-                container.innerHTML = '<div class="loading-state"><p>Nenhum datalogger encontrado para esta usina.</p></div>';
+                container.innerHTML = '<div class="loading-state"><p>Nenhum equipamento encontrado para esta usina.</p></div>';
             }
 
         } catch (error) {
             console.error(error);
-            container.innerHTML = `<div class="error-state"><p>Erro ao carregar os equipamentos.</p></div>`;
+            container.innerHTML = `<div class="error-state"><p>Erro: ${error.message}</p></div>`;
         }
     }
 

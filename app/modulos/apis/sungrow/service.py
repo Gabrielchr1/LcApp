@@ -156,36 +156,57 @@ async def obter_falhas_sungrow_com_cache(db: AsyncSession, empresa_id: int, api_
 # 3. EQUIPAMENTOS (DATALOGGERS/DEVICES)
 # ==========================================
 def normalizar_dispositivos_sungrow(dados_brutos):
-    """Padroniza a lista de dispositivos para o Frontend achar que é Growatt"""
+    """
+    Padroniza a lista de dispositivos (dataloggers/inversores) 
+    para o Frontend consumir no mesmo formato, independente da marca.
+    """
+    
+    if str(dados_brutos.get("result_code")) != "1":
+        return {
+            "dataloggers": [],
+            "error_msg": dados_brutos.get("result_msg", "Erro ao buscar dispositivos na Sungrow")
+        }
+
     dispositivos_normalizados = []
     
-    page_list = dados_brutos.get("result_data", {}).get("pageList", []) if dados_brutos.get("result_data") else []
+    # Extrai a lista paginada do JSON da Sungrow
+    result_data = dados_brutos.get("result_data") or {}
+    page_list = result_data.get("pageList") or []
     
     for dev in page_list:
+        # LÓGICA DE STATUS
+        # dev_status: 0 (Undeployed/Offline), 1 (Deployed/Online)
+        # dev_fault_status: 1 (Fault), 2 (Alarm), 4 (Normal)
         is_lost = False
-        if str(dev.get("dev_status")) == "0" or dev.get("dev_fault_status") == 1:
+        if str(dev.get("dev_status")) == "0" or str(dev.get("dev_fault_status")) == "1":
             is_lost = True
 
+        # LÓGICA DE DATA
         last_time_obj = None
         raw_time = dev.get("rel_time") or dev.get("grid_connection_date")
         
         if raw_time:
             try:
                 from datetime import datetime
+                # A API da Sungrow devolve no padrão "2025-07-28 09:57:21"
                 dt = datetime.strptime(raw_time, "%Y-%m-%d %H:%M:%S")
+                
+                # Montamos o objeto exatamente como o Javascript (detalhes.html) espera
                 last_time_obj = {
                     "date": dt.day,
                     "month": dt.month,
-                    "year": dt.year - 1900, 
+                    "year": dt.year - 1900,  # O JS soma 1900, então enviamos subtraído
                     "hours": dt.hour,
                     "minutes": dt.minute,
                     "seconds": dt.second
                 }
-            except:
+            except Exception as e:
+                print(f"Erro ao converter data do dispositivo Sungrow: {e}")
                 pass 
 
+        # ADICIONANDO À LISTA NORMALIZADA
         dispositivos_normalizados.append({
-            "sn": dev.get("device_sn", "Desconhecido"),
+            "sn": dev.get("device_sn", "SN Desconhecido"),
             "manufacturer": dev.get("factory_name", "Sungrow"),
             "model": dev.get("device_model_code", "Desconhecido"),
             "type": dev.get("type_name", "Inversor"),

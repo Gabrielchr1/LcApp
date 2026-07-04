@@ -76,7 +76,8 @@ function renderizarPlantas(plantas) {
             </div>
 
             <div class="planta-acao">
-                <button class="btn-acao" onclick="abrirDetalhesPlanta(${planta.plant_id})">
+                <!-- Adicionado o parâmetro da marca no clique -->
+                <button class="btn-acao" onclick="abrirDetalhesPlanta(${planta.plant_id}, '${planta.marca}')">
                     Equipamentos
                 </button>
             </div>
@@ -90,6 +91,7 @@ function renderizarPlantas(plantas) {
     document.getElementById('count-falha').textContent = contadores.falha;
 }
 
-function abrirDetalhesPlanta(plantId) {
-    window.location.href = `/dashboard/plantas/${plantId}`;
+// Atualizada para receber e repassar a marca na URL
+function abrirDetalhesPlanta(plantId, marca) {
+    window.location.href = `/dashboard/plantas/${marca.toLowerCase()}/${plantId}`;
 }

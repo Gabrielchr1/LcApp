@@ -1,4 +1,11 @@
 
+git status
+
+git add .
+git commit -m "00001"
+git push
+
+
 alembic init -t async migrations
 
 alembic revision --autogenerate -m "Criando tabelasxss"
@@ -11,8 +18,3 @@ uvicorn app.main:app --reload
 ===========================================
 
 
-
-Ótimo!
-
-As informações veio perfeitamente, porem, acho que precisamos ajustar o html, pois a estrutura da lista ficou um pouco desconfigurada.
-e ajustar os contrates das cores.
