@@ -1,0 +1,176 @@
+/* base.css */
+
+/* --- Variáveis do Tema Dark Premium --- */
+:root {
+    --bg-deep: #050B14;
+    --bg-panel: #111827;
+    --bg-hover: #1F2937;
+    --text-main: #F8FAFC;
+    --text-muted: #94A3B8;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    
+    /* Cores Neon para Status */
+    --neon-green: #10B981;
+    --neon-red: #EF4444;
+    --neon-orange: #F59E0B;
+    --neon-blue: #141d2c;
+}
+
+/* Reset básico e tipografia */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    /* Fundo escuro com um brilho muito sutil no topo para dar profundidade */
+    background: radial-gradient(circle at 50% -20%, #1E293B 0%, var(--bg-deep) 80%);
+    background-color: var(--bg-deep);
+    color: var(--text-main);
+    min-height: 100vh;
+}
+
+/* --- Navbar Moderna (Compacta) --- */
+.navbar {
+    background-color: rgba(17, 24, 39, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 10px 25px; /* Reduzido */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar-brand { 
+    font-size: 1.1rem; /* Reduzido */ 
+    font-weight: 700; 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    letter-spacing: 0.5px; 
+    background: linear-gradient(90deg, #F8FAFC, #94A3B8); 
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; 
+}
+
+.logo-icon { font-size: 1.2rem; } /* Reduzido */
+
+.navbar-menu { display: flex; align-items: center; gap: 15px; }
+
+.user-info { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+
+/* --- Indicador de Status da API --- */
+.api-status-container { 
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    border-radius: 30px;
+    padding: 4px 12px; /* Reduzido */
+}
+
+.api-text { 
+    font-size: 0.75rem; /* Reduzido */ 
+    font-weight: 600; 
+    color: var(--text-muted); 
+    letter-spacing: 0.5px;
+}
+
+.api-indicator {
+    width: 10px; height: 10px; border-radius: 50%;
+    background-color: #475569; transition: all 0.4s ease;
+}
+
+.api-online {
+    background-color: var(--neon-green);
+    box-shadow: 0 0 12px var(--neon-green);
+}
+
+.api-offline {
+    background-color: var(--neon-red);
+    box-shadow: 0 0 12px var(--neon-red);
+    animation: piscar 2s infinite;
+}
+
+@keyframes piscar {
+    0% { opacity: 1; box-shadow: 0 0 12px var(--neon-red); }
+    50% { opacity: 0.4; box-shadow: 0 0 4px var(--neon-red); }
+    100% { opacity: 1; box-shadow: 0 0 12px var(--neon-red); }
+}
+
+.btn-logout {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.8rem; /* Reduzido */
+    padding: 5px 12px; /* Reduzido */
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.btn-logout:hover { 
+    color: #fff; 
+    background-color: rgba(255, 255, 255, 0.05); 
+}
+
+/* --- Área Principal (Largura total da tela) --- */
+.main-content {
+    max-width: 98%; /* Ocupa quase toda a tela */
+    margin: 0 auto;
+    padding: 20px 10px; /* Reduzido */
+}
+
+/* --- Cabeçalho do Dashboard --- */
+.dashboard-header {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    margin-bottom: 20px; /* Reduzido */
+}
+
+.dashboard-header h2 {
+    font-size: 1.3rem; /* Reduzido */
+    font-weight: 600;
+    color: var(--text-main);
+    letter-spacing: -0.5px;
+}
+
+.btn-atualizar {
+    background-color: rgba(255, 255, 255, 0.05); /* Fundo de vidro escuro */
+    color: var(--text-main);
+    border: 1px solid var(--border-subtle);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex; 
+    align-items: center; 
+    gap: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra preta suave, sem azul */
+}
+
+.btn-atualizar:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+/* Estados de Carregamento e Erro */
+.loading-state, .error-state { 
+    text-align: center; 
+    padding: 60px; 
+    color: var(--text-muted); 
+}
+
+.error-state { 
+    color: #FCA5A5; 
+    background: rgba(239, 68, 68, 0.05); 
+    border-radius: 12px; 
+    border: 1px solid rgba(239, 68, 68, 0.2); 
+}

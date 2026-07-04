@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block title %}Detalhes da Usina - AppSolar{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/modulos/plantas.css') }}?v=11">
+<style>
+    /* Estilo do Botão Voltar Premium */
+    .btn-voltar {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 25px;
+        color: var(--text-muted);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        background: rgba(255, 255, 255, 0.03);
+        padding: 8px 18px;
+        border-radius: 8px;
+        border: 1px solid var(--border-subtle);
+        transition: all 0.3s;
+    }
+
+    .btn-voltar:hover { 
+        color: var(--text-main);
+        background: rgba(255, 255, 255, 0.08);
+        transform: translateX(-4px); /* Animação sutil para a esquerda */
+    }
+
+    /* Estilos Dark/Glass para a tabela de dataloggers */
+    .datalogger-container {
+        background: var(--bg-panel);
+        border: 1px solid var(--border-subtle);
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+        overflow: hidden; 
+        margin-top: 10px;
+    }
+
+    .datalogger-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .datalogger-table th, .datalogger-table td {
+        padding: 18px 24px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .datalogger-table th {
+        background-color: rgba(0, 0, 0, 0.2);
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+    }
+
+    .datalogger-table td {
+        color: var(--text-main);
+        font-size: 0.95rem;
+    }
+
+    .datalogger-table tr {
+        transition: background 0.3s;
+    }
+
+    .datalogger-table tr:hover {
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .datalogger-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* Badges ajustados para a tabela */
+    .datalogger-table .badge-status {
+        width: auto;
+        display: inline-flex;
+        padding: 6px 14px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<a href="/" class="btn-voltar">← Voltar para Usinas</a>
+
+<div class="dashboard-header">
+    <h2>Equipamentos da Usina (ID: {{ plant_id }})</h2>
+    <div class="dashboard-actions">
+        <button class="btn-atualizar" onclick="carregarDataloggers()">🔄 Atualizar Equipamentos</button>
+    </div>
+</div>
+
+<div id="container-dataloggers">
+    <div class="loading-state">
+        <p>Buscando dataloggers...</p>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Pegamos o ID da usina que o FastAPI injetou no HTML
+    const plantId = {{ plant_id }};
+
+    async function carregarDataloggers() {
+        const container = document.getElementById('container-dataloggers');
+        container.innerHTML = '<div class="loading-state"><p>Buscando comunicação com os inversores...</p></div>';
+
+        try {
+            // Chamamos a rota de dataloggers que já criamos lá no início do projeto
+            const response = await fetch(`/api/growatt/dataloggers/${plantId}`);
+            
+            if (!response.ok) {
+                throw new Error("Falha ao buscar os dispositivos");
+            }
+
+            const data = await response.json();
+            
+            if (data.dataloggers && data.dataloggers.length > 0) {
+                renderizarTabela(data.dataloggers);
+            } else {
+                container.innerHTML = '<div class="loading-state"><p>Nenhum datalogger encontrado para esta usina.</p></div>';
+            }
+
+        } catch (error) {
+            console.error(error);
+            container.innerHTML = `<div class="error-state"><p>Erro ao carregar os equipamentos.</p></div>`;
+        }
+    }
+
+    function renderizarTabela(dataloggers) {
+        let html = `
+            <div class="datalogger-container">
+                <table class="datalogger-table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Nº de Série (SN)</th>
+                            <th>Fabricante</th>
+                            <th>Modelo</th>
+                            <th>Última Atualização</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+
+        dataloggers.forEach(dl => {
+            // A doc da Growatt diz que "lost: true" significa que perdeu comunicação
+            // ADICIONADO: O span "status-dot" para fazer o efeito neon piscar na bolinha
+            const statusVisual = dl.lost ? 
+                '<span class="badge-status status-offline"><span class="status-dot"></span>OFFLINE</span>' : 
+                '<span class="badge-status status-online"><span class="status-dot"></span>ONLINE</span>';
+
+            // Formata a data que vem quebrada da API da Growatt
+            let dataAtualizacao = '<span style="color: #64748B;">Sem dados</span>';
+            if(dl.last_update_time) {
+                const t = dl.last_update_time;
+                // Ex: 13/11/2018 11:06:34
+                // Adicionado zero à esquerda para manter padrão visual (ex: 09:05)
+                const dia = String(t.date).padStart(2, '0');
+                const mes = String(t.month).padStart(2, '0');
+                const hora = String(t.hours).padStart(2, '0');
+                const min = String(t.minutes).padStart(2, '0');
+                const seg = String(t.seconds).padStart(2, '0');
+                
+                dataAtualizacao = `${dia}/${mes}/${t.year + 1900} às ${hora}:${min}:${seg}`;
+            }
+
+            html += `
+                <tr>
+                    <td>${statusVisual}</td>
+                    <td><strong style="color: var(--neon-blue); font-family: monospace; font-size: 1.1rem;">${dl.sn}</strong></td>
+                    <td>${dl.manufacturer}</td>
+                    <td>${dl.model || dl.type}</td>
+                    <td>${dataAtualizacao}</td>
+                </tr>
+            `;
+        });
+
+        html += `
+                    </tbody>
+                </table>
+            </div>
+        `;
+        document.getElementById('container-dataloggers').innerHTML = html;
+    }
+
+    document.addEventListener("DOMContentLoaded", carregarDataloggers);
+</script>
+{% endblock %}

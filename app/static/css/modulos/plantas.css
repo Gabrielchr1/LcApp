@@ -1,0 +1,225 @@
+/* plantas.css */
+
+/* --- Painel de Indicadores (Menores e mais discretos) --- */
+.dashboard-summary {
+    display: flex; 
+    gap: 15px; 
+    margin-bottom: 25px;
+}
+
+.summary-card {
+    flex: 1;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 15px 20px;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Brilho no topo do card */
+.summary-card::before {
+    content: ''; 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 4px;
+}
+
+.summary-card.online::before { background: var(--neon-green); box-shadow: 0 0 15px var(--neon-green); }
+.summary-card.falha::before { background: var(--neon-orange); box-shadow: 0 0 15px var(--neon-orange); }
+.summary-card.offline::before { background: var(--neon-red); box-shadow: 0 0 15px var(--neon-red); }
+
+.summary-value { 
+    font-size: 2rem; 
+    font-weight: 700; 
+    line-height: 1; 
+    margin-bottom: 3px;
+}
+
+.summary-card.online .summary-value { color: var(--neon-green); text-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+.summary-card.falha .summary-value { color: var(--neon-orange); text-shadow: 0 0 20px rgba(245, 158, 11, 0.3); }
+.summary-card.offline .summary-value { color: var(--neon-red); text-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
+
+.summary-label { 
+    font-size: 0.75rem; 
+    color: var(--text-muted); 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    font-weight: 600;
+}
+
+/* --- Container da Lista --- */
+.list-container {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    overflow: hidden; 
+    position: relative;
+    /* Força o container a preencher exatamente o espaço restante da tela */
+    height: calc(100vh - 290px); 
+}
+
+.list-plantas {
+    height: 100%; /* Preenche 100% do card */
+    max-height: none; 
+    overflow-y: auto;
+    display: flex; 
+    flex-direction: column;
+    
+    /* Oculta a barra de rolagem no Firefox e IE/Edge */
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
+}
+
+/* Oculta a barra de rolagem no Chrome/Safari/Edge/Opera completamente */
+.list-plantas::-webkit-scrollbar { 
+    display: none; 
+    width: 0px; 
+    background: transparent; 
+}
+
+/* --- Linhas Individuais (Usinas) - Layout CSS Grid --- */
+.row-planta {
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border-subtle);
+    transition: background 0.3s;
+    gap: 20px;
+}
+
+.row-planta:hover { background: rgba(255, 255, 255, 0.02); }
+.row-planta:last-child { border-bottom: none; }
+
+/* Bloco 1: Status e Nome (Largura Fixa para manter alinhamento perfeito) */
+.planta-info { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    width: 280px; 
+    flex-shrink: 0; 
+}
+
+.planta-nome {
+    font-weight: 600; 
+    color: var(--text-main); 
+    font-size: 1.05rem;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+}
+
+/* Bloco 2: Detalhes com CSS Grid para alinhamento perfeito tipo tabela */
+.planta-detalhes {
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr 1fr 1.5fr; 
+    gap: 20px; 
+    flex: 1; 
+    align-items: center;
+}
+
+.planta-detalhes span { display: flex; flex-direction: column; }
+
+.detalhe-label { 
+    font-size: 0.7rem; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    color: #94A3B8; 
+    margin-bottom: 4px;
+}
+
+.detalhe-valor { 
+    font-weight: 600; 
+    color: #F8FAFC; 
+    font-size: 1.05rem; 
+}
+
+/* Classes de destaque visual adicionadas via JS */
+.valor-destaque-azul {
+    color: #60A5FA;
+    text-shadow: 0 0 12px rgba(96, 165, 250, 0.3);
+}
+
+.valor-destaque-verde {
+    color: #34D399;
+    text-shadow: 0 0 12px rgba(52, 211, 153, 0.2);
+}
+
+.valor-unidade {
+    font-size: 0.75rem; 
+    color: #64748B;
+    font-weight: 500;
+}
+
+/* Bloco 3: Botão de ação alinhado no final */
+.planta-acao {
+    display: flex;
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+
+/* --- Status Minimalista Premium --- */
+.status-dot {
+    width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 10px;
+}
+
+.badge-status {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 600; padding: 6px 12px;
+    border-radius: 20px; width: 110px; letter-spacing: 0.5px; flex-shrink: 0;
+}
+
+/* Badges com fundo transparente e borda iluminada (Estilo Cyberpunk/Moderno) */
+.status-online { 
+    color: var(--neon-green); 
+    background: rgba(16, 185, 129, 0.1); 
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.status-online .status-dot { background-color: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); }
+
+.status-offline { 
+    color: var(--neon-red); 
+    background: rgba(239, 68, 68, 0.1); 
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.status-offline .status-dot { background-color: var(--neon-red); box-shadow: 0 0 10px var(--neon-red); animation: pulse-dot 2s infinite; }
+
+.status-falha { 
+    color: var(--neon-orange); 
+    background: rgba(245, 158, 11, 0.1); 
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.status-falha .status-dot { background-color: var(--neon-orange); box-shadow: 0 0 10px var(--neon-orange); }
+
+@keyframes pulse-dot {
+    0% { opacity: 1; }
+    50% { opacity: 0.2; }
+    100% { opacity: 1; }
+}
+
+/* --- Botão de Ação --- */
+.btn-acao {
+    padding: 8px 16px;
+    background: transparent;
+    color: var(--text-main);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.85rem;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.btn-acao:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: #94A3B8;
+}

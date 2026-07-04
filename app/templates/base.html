@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AppSolar Monitor{% endblock %}</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{{ url_for('static', path='css/base.css') }}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <span class="logo-icon">☀️</span> LC Energia
+        </div>
+        <div class="navbar-menu">
+            <div class="api-status-container" title="Status da comunicação com a API (Growatt)">
+                <span class="api-indicator" id="growatt-status-dot"></span>
+                <span id="growatt-status-text" class="api-text">Growatt: Conectando...</span>
+            </div>
+
+            <span class="user-info">Bem-vindo, Administrador</span>
+            <a href="#" class="btn-logout">Sair</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

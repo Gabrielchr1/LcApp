@@ -1,0 +1,18 @@
+
+alembic init -t async migrations
+
+alembic revision --autogenerate -m "Criando tabelasxss"
+
+alembic upgrade head
+
+
+uvicorn app.main:app --reload
+
+===========================================
+
+
+
+Ótimo!
+
+As informações veio perfeitamente, porem, acho que precisamos ajustar o html, pois a estrutura da lista ficou um pouco desconfigurada.
+e ajustar os contrates das cores.

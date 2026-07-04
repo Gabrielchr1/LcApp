@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block title %}Configurações Sungrow - AppSolar{% endblock %}
+
+{% block extra_css %}
+<style>
+    .config-container {
+        max-width: 600px;
+        margin: 20px auto;
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .config-header {
+        border-bottom: 2px solid #ea580c;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .config-header h2 {
+        color: #1E293B;
+        margin: 0 0 5px 0;
+        font-size: 1.5rem;
+    }
+
+    .config-header p {
+        color: #64748B;
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #475569;
+        font-size: 0.9rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #CBD5E1;
+        border-radius: 6px;
+        box-sizing: border-box;
+        font-size: 0.95rem;
+        transition: border-color 0.2s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #ea580c;
+        box-shadow: 0 0 0 2px rgba(234, 88, 12, 0.1);
+    }
+
+    .btn-submit {
+        background-color: #ea580c;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1rem;
+        width: 100%;
+        font-weight: bold;
+        transition: background-color 0.2s;
+        margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+        background-color: #c2410c;
+    }
+
+    .btn-submit:disabled {
+        background-color: #fdba74;
+        cursor: not-allowed;
+    }
+
+    .result-box {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 6px;
+        display: none;
+        font-size: 0.95rem;
+    }
+
+    .result-box.success {
+        background-color: #F0FDF4;
+        color: #166534;
+        border: 1px solid #BBF7D0;
+    }
+
+    .result-box.error {
+        background-color: #FEF2F2;
+        color: #991B1B;
+        border: 1px solid #FECACA;
+    }
+
+    .token-display {
+        font-family: monospace;
+        background: #ffffff;
+        padding: 10px;
+        word-break: break-all;
+        margin-top: 10px;
+        border-radius: 4px;
+        border: 1px solid #E2E8F0;
+        color: #1E293B;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="config-container">
+    <div class="config-header">
+        <h2>Credenciais iSolarCloud (Sungrow)</h2>
+        <p>Gere seu token de acesso automaticamente autenticando-se na API.</p>
+    </div>
+
+    <form id="sungrowConfigForm">
+        <div class="form-group">
+            <label for="appKey">App Key (iSolarCloud API):</label>
+            <input type="text" id="appKey" class="form-control" required placeholder="Ex: sua_app_key_aqui">
+        </div>
+
+        <div class="form-group">
+            <label for="secretKey">Secret Key (iSolarCloud API):</label>
+            <input type="text" id="secretKey" class="form-control" required placeholder="Ex: sua_secret_key_aqui">
+        </div>
+
+        <div class="form-group">
+            <label for="userAccount">E-mail de Login:</label>
+            <input type="email" id="userAccount" class="form-control" required placeholder="exemplo@email.com">
+        </div>
+
+        <div class="form-group">
+            <label for="userPassword">Senha:</label>
+            <input type="password" id="userPassword" class="form-control" required placeholder="Sua senha da iSolarCloud">
+        </div>
+
+        <button type="submit" id="btnTestar" class="btn-submit">Gerar Token de Autenticação</button>
+    </form>
+
+    <div id="resultMessage" class="result-box"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('sungrowConfigForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('btnTestar');
+        const resultBox = document.getElementById('resultMessage');
+        
+        // Estado de Loading
+        btn.textContent = "Autenticando aguarde...";
+        btn.disabled = true;
+        resultBox.style.display = "none";
+        resultBox.className = "result-box"; // Limpa classes antigas
+
+        // Monta o payload
+        const payload = {
+            app_key: document.getElementById('appKey').value.trim(),
+            secret_key: document.getElementById('secretKey').value.trim(),
+            user_account: document.getElementById('userAccount').value.trim(),
+            user_password: document.getElementById('userPassword').value.trim()
+        };
+
+        try {
+            const response = await fetch('/api/sungrow/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                resultBox.classList.add('success');
+                resultBox.innerHTML = `
+                    <strong>✅ ${data.message}</strong><br>
+                    Seu Token de acesso é:
+                    <div class="token-display">${data.token}</div>
+                    <small style="display:block; margin-top:10px; color:#15803D;">
+                        <em>Em breve, este token será persistido no banco de dados automaticamente (PostgreSQL).</em>
+                    </small>
+                `;
+            } else {
+                resultBox.classList.add('error');
+                resultBox.innerHTML = `<strong>❌ Erro:</strong> ${data.message || 'Falha na autenticação.'}`;
+            }
+        } catch (error) {
+            console.error("Erro na requisição:", error);
+            resultBox.classList.add('error');
+            resultBox.innerHTML = `<strong>❌ Falha na comunicação com o servidor.</strong> Verifique o console.`;
+        } finally {
+            // Restaura o botão
+            resultBox.style.display = "block";
+            btn.textContent = "Gerar Token de Autenticação";
+            btn.disabled = false;
+        }
+    });
+</script>
+{% endblock %}

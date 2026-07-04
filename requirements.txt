@@ -1,0 +1,15 @@
+# Web Framework
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+
+# HTTP Client (Comunicação com a Growatt)
+httpx>=0.25.0
+
+# Configurações e Templates
+python-dotenv>=1.0.0
+jinja2>=3.1.2
+
+# Banco de Dados e Migrações
+sqlalchemy>=2.0.23
+aiosqlite>=0.19.0
+alembic>=1.12.1
