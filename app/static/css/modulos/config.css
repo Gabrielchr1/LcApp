@@ -1,0 +1,188 @@
+/* Container principal em Grid */
+.config-wrapper {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+.page-title {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.page-title h2 {
+    color: var(--text-main);
+}
+
+.page-title p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+
+/* =========================================
+   GRID E ALINHAMENTO DOS CARDS
+   ========================================= */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    /* REMOVIDO o align-items: start; para que todos os cards da mesma linha estiquem igualmente */
+}
+
+/* O Card Flutuante */
+.config-card {
+    background: var(--card-bg);
+    padding: 30px 25px;
+    border-radius: var(--radius-float, 16px);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s, box-shadow 0.2s;
+    
+    /* ADICIONADO: Flexbox para alinhar o conteúdo interno */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.config-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-float);
+}
+
+/* Faz o formulário ocupar todo o espaço restante do card */
+.config-card form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+/* Cabeçalhos personalizados por marca */
+.config-header {
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+}
+
+/* ... (mantenha suas cores header-sungrow, solis, etc) ... */
+
+/* =========================================
+   AJUSTE DOS BOTÕES PARA FICAREM ALINHADOS NO FUNDO
+   ========================================= */
+.btn-submit {
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    width: 100%;
+    font-weight: 500;
+    transition: all 0.2s;
+    /* ADICIONADO: Empurra o botão sempre para o final do card */
+    margin-top: auto; 
+}
+
+
+.header-sungrow { border-bottom: 2px solid #ea580c; }
+.header-solis { border-bottom: 2px solid #3B82F6; }
+.header-growatt { border-bottom: 2px solid #16a34a; }
+.header-saj { border-bottom: 2px solid #8B5CF6; }
+.header-deye { border-bottom: 2px solid #0891b2; }
+
+.config-header h2 {
+    color: var(--text-main);
+    margin: 0 0 5px 0;
+    font-size: 1.3rem;
+}
+
+.config-header p {
+    color: var(--text-muted);
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+/* Formulários e Inputs */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: var(--text-main);
+    font-size: 0.85rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--input-bg);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 0.9rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--text-muted);
+}
+
+.input-sungrow:focus { border-color: #ea580c; box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
+.input-solis:focus { border-color: #3B82F6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+.input-growatt:focus { border-color: #16a34a; box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1); }
+.input-saj:focus { border-color: #8B5CF6; box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1); }
+.input-deye:focus { border-color: #0891b2; box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1); }
+
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-sungrow { background-color: #ea580c; }
+.btn-sungrow:hover { background-color: #c2410c; }
+.btn-solis { background-color: #3B82F6; }
+.btn-solis:hover { background-color: #2563EB; }
+.btn-growatt { background-color: #16a34a; }
+.btn-growatt:hover { background-color: #15803d; }
+.btn-saj { background-color: #8B5CF6; }
+.btn-saj:hover { background-color: #7C3AED; }
+.btn-deye { background-color: #0891b2; }
+.btn-deye:hover { background-color: #0e7490; }
+
+/* Feedbacks e Resultados (Ajustado para aceitar dark mode perfeitamente) */
+.result-box {
+    margin-top: 20px;
+    padding: 12px 15px;
+    border-radius: 6px;
+    display: none;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.result-box.success { 
+    background-color: rgba(16, 185, 129, 0.1); 
+    color: var(--status-online, #10B981); 
+    border: 1px solid rgba(16, 185, 129, 0.3); 
+}
+.result-box.error { 
+    background-color: rgba(239, 68, 68, 0.1); 
+    color: var(--status-offline, #EF4444); 
+    border: 1px solid rgba(239, 68, 68, 0.3); 
+}
+
+.token-display {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    background: var(--bg-main);
+    padding: 8px 10px;
+    word-break: break-all;
+    margin-top: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    font-size: 0.85rem;
+}

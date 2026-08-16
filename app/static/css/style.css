@@ -1,0 +1,188 @@
+/* =========================================
+   1. VARIÁVEIS GLOBAIS DE TEMA
+   ========================================= */
+:root {
+    /* TEMA CLARO (Padrão) */
+    --bg-main: #f8fafc; 
+    --text-dark: #0f172a;
+    --text-gray: #64748b;
+    --card-bg: #ffffff;
+    --border-color: rgba(0, 0, 0, 0.06);
+    --hover-bg: rgba(0, 0, 0, 0.03);
+    --input-bg: #f8fafc;
+    --modal-overlay: rgba(15, 23, 42, 0.4);
+    
+    /* Padrões Visuais */
+    --radius-float: 16px; /* Cantos levemente mais retos e elegantes */
+    --shadow-float: 0 8px 32px rgba(0, 0, 0, 0.08);
+    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.03);
+    
+    --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* TEMA ESCURO (Sincronizado perfeitamente com Sidebar) */
+body.dark-theme {
+    /* Usando os mesmos tons do fundo do Sidebar */
+    --bg-main: #0f172a; 
+    --text-dark: #f8fafc; 
+    --text-gray: #94a3b8; 
+    --card-bg: #1e293b; 
+    --border-color: rgba(255, 255, 255, 0.06); 
+    --hover-bg: rgba(255, 255, 255, 0.03); 
+    --input-bg: #0f172a; 
+    --modal-overlay: rgba(0, 0, 0, 0.7); 
+    
+    --shadow-float: 0 8px 32px rgba(0, 0, 0, 0.25);
+    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================================
+   2. RESET E CONFIGURAÇÕES BASE
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-dark);
+    overflow-x: hidden;
+    /* Transição suave para todas as cores quando o tema mudar */
+    transition: background-color var(--transition-smooth), color var(--transition-smooth); 
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+/* =========================================
+   3. ÁREA PRINCIPAL (MAIN CONTENT)
+   ========================================= */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 16px; 
+    gap: 8px;
+}
+
+.page-header {
+    padding: 8px 12px;
+}
+
+.page-header h2 {
+    font-size: 1rem; /* Usando rem para consistência com o resto da UI */
+    font-weight: 500;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.content-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    border-radius: var(--radius-float);
+    padding: 4px 4px 32px 4px; 
+}
+
+/* =========================================
+   4. OCULTAR BARRAS DE ROLAGEM GLOBAIS
+   ========================================= */
+/* Oculta em navegadores baseados em WebKit (Chrome, Edge, Safari, Opera) */
+::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    background: transparent !important;
+}
+
+/* Oculta no Firefox e IE/Edge legado */
+* {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+
+/* =========================================
+   5. COMPONENTES GENÉRICOS (CARDS)
+   ========================================= */
+.card {
+    background: var(--card-bg);
+    border-radius: var(--radius-float);
+    padding: 32px;
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color var(--transition-smooth), border-color var(--transition-smooth);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-float);
+}
+
+.card h3 {
+    font-size: 1.15rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+    color: var(--text-dark);
+}
+
+.card p {
+    font-size: 0.9rem;
+    color: var(--text-gray);
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+/* =========================================
+   6. INTEGRAÇÃO DARK MODE COM COMPONENTES
+   (Sobrescreve hardcodes do components.css)
+   ========================================= */
+
+/* Modais e Cards do Dashboard */
+body.dark-theme .modal-content,
+body.dark-theme .dash-card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+body.dark-theme .modal {
+    background-color: var(--modal-overlay);
+}
+
+/* Tabelas e Linhas divisórias */
+body.dark-theme .data-table th,
+body.dark-theme .data-table td,
+body.dark-theme .modal-footer,
+body.dark-theme .dash-footer,
+body.dark-theme .dash-header {
+    border-color: var(--border-color);
+}
+body.dark-theme .data-table tbody tr:hover td {
+    background-color: var(--hover-bg);
+}
+
+/* Formulários (Inputs, Selects) */
+body.dark-theme .form-group input,
+body.dark-theme .form-group select,
+body.dark-theme .form-group textarea {
+    background-color: var(--input-bg);
+    border-color: var(--border-color);
+    color: var(--text-dark);
+}
+body.dark-theme .form-group input:focus,
+body.dark-theme .form-group select:focus,
+body.dark-theme .form-group textarea:focus {
+    background-color: var(--card-bg);
+    border-color: #3b82f6; /* Foco sutil em azul */
+}
+
+/* Botões Secundários */
+body.dark-theme .btn-secondary,
+body.dark-theme .action-btn:hover {
+    background-color: var(--hover-bg);
+    color: var(--text-dark);
+}

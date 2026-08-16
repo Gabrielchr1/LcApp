@@ -1,107 +1,57 @@
 {% extends "base.html" %}
 
 {% block title %}Dashboard - AppSolar{% endblock %}
+{% block page_title %}Monitoramento em Tempo Real{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', path='css/modulos/plantas.css') }}?v=11">
-<style>
-    /* Estilos do Dark Mode para os filtros e config */
-    .filtros-marca {
-        display: flex;
-        gap: 8px;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        padding: 4px;
-        border-radius: 10px;
-        margin-right: 20px;
-    }
-
-    .btn-filtro {
-        border: 1px solid transparent;
-        background: transparent;
-        padding: 6px 14px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: 500;
-        color: #64748B;
-        transition: all 0.3s;
-        font-size: 0.8rem;
-    }
-
-    .btn-filtro:hover {
-            color: #F8FAFC;
-        }
-
-    .btn-filtro.active {
-            background: rgba(255, 255, 255, 0.08);
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.15); /* Borda refinada */
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2); /* Sombra elegante, nada de azul */
-        }
-
-    /* Botão de configuração discreto e moderno */
-    .btn-config {
-        border: 1px solid transparent;
-        background: rgba(255, 255, 255, 0.03);
-        padding: 6px 10px; /* Reduzido */
-        border-radius: 8px;
-        cursor: pointer;
-        color: #64748B;
-        transition: all 0.3s;
-        font-size: 1.1rem; /* Reduzido */
-        margin-left: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .btn-config:hover {
-        background: rgba(255, 255, 255, 0.1);
-        border-color: rgba(255, 255, 255, 0.2);
-        color: #F8FAFC;
-    }
-</style>
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/modulos/plantas.css') }}?v=14">
 {% endblock %}
 
 {% block content %}
-<div class="dashboard-header">
-    <h2>Monitoramento em Tempo Real</h2>
-    <div class="dashboard-actions" style="display: flex; align-items: center;">
-        
+<!-- NOVA TOPBAR: Resumo na Esquerda, Ações na Direita -->
+<div class="dashboard-topbar">
+    
+    <!-- LADO ESQUERDO: Indicadores Minimalistas -->
+    <div class="dashboard-summary-mini">
+        <div class="summary-pill online">
+            <span class="pill-dot"></span>
+            <span class="pill-label">Online</span>
+            <strong class="pill-value" id="count-online">0</strong>
+        </div>
+        <div class="summary-pill falha">
+            <span class="pill-dot"></span>
+            <span class="pill-label">Falha/Esp.</span>
+            <strong class="pill-value" id="count-falha">0</strong>
+        </div>
+        <div class="summary-pill offline">
+            <span class="pill-dot"></span>
+            <span class="pill-label">Offline</span>
+            <strong class="pill-value" id="count-offline">0</strong>
+        </div>
+    </div>
+
+    <!-- LADO DIREITO: Filtros e Botões alinhados -->
+    <div class="dashboard-actions-container">
         <div class="filtros-marca">
-            <button class="btn-filtro active" onclick="aplicarFiltro('Todas', this)">Todas</button>
-            <button class="btn-filtro" onclick="aplicarFiltro('Growatt', this)">Growatt</button>
-            <button class="btn-filtro" onclick="aplicarFiltro('Sungrow', this)">Sungrow</button>
-            <button class="btn-filtro" onclick="aplicarFiltro('Solis', this)">Solis</button>
+            <button class="btn-filtro active" data-marca="Todas">Todas</button>
+            <button class="btn-filtro" data-marca="Growatt">Growatt</button>
+            <button class="btn-filtro" data-marca="Sungrow">Sungrow</button>
+            <button class="btn-filtro" data-marca="Solis">Solis</button>
+            <button class="btn-filtro" data-marca="SAJ">SAJ</button>
+            <button class="btn-filtro" data-marca="DEYE">Deye</button>
         </div>
 
-        <button class="btn-atualizar" onclick="carregarUsinas()">🔄 Atualizar</button>
-
-        <!-- NOVO: Botão de Auto-Scroll movido para cá (Ícone minimalista) -->
-        <button id="btnAutoScroll" class="btn-config" onclick="toggleAutoScroll()" title="Auto-Scroll (Play/Pause)">
-            ⏵
-        </button>
-
-        <button class="btn-config" onclick="toggleFullScreen()" title="Tela Cheia">⛶</button>
-        <button class="btn-config" onclick="window.location.href='/dashboard/configuracoes'" title="Configurações">⚙️</button>
+        <div class="dashboard-actions-group">
+            <button class="btn-atualizar" id="btnAtualizar"><i class='bx bx-refresh'></i> Atualizar</button>
+            <button class="btn-config" id="btnAutoScroll" title="Auto-Scroll"><i class='bx bx-play'></i></button>
+            <button class="btn-config" id="btnFullScreen" title="Tela Cheia"><i class='bx bx-fullscreen'></i></button>
+            <button class="btn-config" id="btnConfig" title="Configurações"><i class='bx bx-cog'></i></button>
+        </div>
     </div>
+
 </div>
 
-<div class="dashboard-summary">
-    <div class="summary-card online">
-        <span class="summary-value" id="count-online">0</span>
-        <span class="summary-label">Online</span>
-    </div>
-    <div class="summary-card falha">
-        <span class="summary-value" id="count-falha">0</span>
-        <span class="summary-label">Falha/Espera</span>
-    </div>
-    <div class="summary-card offline">
-        <span class="summary-value" id="count-offline">0</span>
-        <span class="summary-label">Offline</span>
-    </div>
-</div>
-
+<!-- O Restante Continua Igual -->
 <div class="list-container">
     <div class="list-plantas" id="container-plantas">
         <div class="loading-state">
@@ -111,182 +61,7 @@
 </div>
 {% endblock %}
 
-{% block extra_js %}
+{% block scripts %}
 <script src="{{ url_for('static', path='js/plantas.js') }}?v=11"></script>
-
-<script>
-    // Variável global para armazenar todas as usinas baixadas do backend
-    let todasAsUsinasGlobal = [];
-
-    // Função principal que busca dados das DUAS APIs independentemente
-async function carregarUsinas() {
-        const container = document.getElementById('container-plantas');
-        container.innerHTML = '<div class="loading-state"><p>Buscando dados nas APIs (Growatt, Sungrow, Solis)...</p></div>';
-        
-        // Limpa a lista a cada atualização
-        todasAsUsinasGlobal = [];
-        let errosGrowatt = null;
-        let errosSungrow = null;
-        let errosSolis = null;
-
-        // 1. Busca usinas da Growatt
-        try {
-            const resGrowatt = await fetch('/api/growatt/plants');
-            if (!resGrowatt.ok) {
-                const errData = await resGrowatt.json();
-                throw new Error(errData.detail || `Erro HTTP ${resGrowatt.status}`);
-            }
-            const dataGrowatt = await resGrowatt.json();
-            if (dataGrowatt.plants) {
-                // Injetamos a "marca" na Growatt para podermos filtrar depois
-                const plantsGrowatt = dataGrowatt.plants.map(p => ({...p, marca: 'Growatt'}));
-                todasAsUsinasGlobal.push(...plantsGrowatt);
-            }
-        } catch (error) {
-            errosGrowatt = `Growatt: ${error.message}`;
-            console.error("Falha Growatt:", error);
-        }
-
-        // 2. Busca usinas da Sungrow
-        try {
-            const resSungrow = await fetch('/api/sungrow/plants');
-            if (!resSungrow.ok) {
-                const errData = await resSungrow.json();
-                throw new Error(errData.detail || `Erro HTTP ${resSungrow.status}`);
-            }
-            const dataSungrow = await resSungrow.json();
-            if (dataSungrow.plants) {
-                // O service.py da Sungrow já inclui a propriedade "marca": "Sungrow"
-                todasAsUsinasGlobal.push(...dataSungrow.plants);
-            }
-        } catch (error) {
-            errosSungrow = `Sungrow: ${error.message}`;
-            console.error("Falha Sungrow:", error);
-        }
-
-        // 3. Busca usinas da Solis
-        try {
-            const resSolis = await fetch('/api/solis/plants');
-            if (!resSolis.ok) {
-                const errData = await resSolis.json().catch(() => ({}));
-                throw new Error(errData.detail || `Erro HTTP ${resSolis.status}`);
-            }
-            const dataSolis = await resSolis.json();
-            if (dataSolis.plants) {
-                // O service.py da Solis já inclui a propriedade "marca": "Solis"
-                todasAsUsinasGlobal.push(...dataSolis.plants);
-            }
-        } catch (error) {
-            errosSolis = `Solis: ${error.message}`;
-            console.error("Falha Solis:", error);
-        }
-
-        // 4. Renderiza o resultado
-        if (todasAsUsinasGlobal.length > 0) {
-            // Se pelo menos uma API funcionou, aplicamos o filtro ativo (por padrão "Todas")
-            const botaoAtivo = document.querySelector('.btn-filtro.active') || document.querySelector('.btn-filtro');
-            aplicarFiltro(botaoAtivo.textContent.trim(), botaoAtivo);
-
-            if (errosGrowatt || errosSungrow || errosSolis) {
-                console.warn("Algumas APIs falharam:", errosGrowatt, errosSungrow, errosSolis);
-            }
-        } else {
-            // Se TODAS as APIs falharam, mostramos a tela de erro fatal unificada
-            const msgErro = [errosGrowatt, errosSungrow, errosSolis].filter(Boolean).join('<br><br>');
-            container.innerHTML = `
-                <div class="error-state">
-                    <h3>⚠️ Falha de Comunicação Geral</h3>
-                    <p>Não foi possível carregar as usinas de nenhum fabricante.</p>
-                    <p style="font-size: 0.85rem; margin-top: 15px; color: #DC2626;">Detalhes:<br>${msgErro || 'Sem resposta dos servidores'}</p>
-                </div>
-            `;
-            
-            // Zera os contadores no topo
-            document.getElementById('count-online').textContent = '0';
-            document.getElementById('count-offline').textContent = '0';
-            document.getElementById('count-falha').textContent = '0';
-        }
-    }
-
-    // Função que aplica o filtro visualmente sem precisar ir no backend
-    function aplicarFiltro(marca, botaoClicado) {
-        if (botaoClicado) {
-            document.querySelectorAll('.btn-filtro').forEach(btn => btn.classList.remove('active'));
-            botaoClicado.classList.add('active');
-        }
-
-        let usinasFiltradas = todasAsUsinasGlobal;
-        if (marca !== 'Todas') {
-            usinasFiltradas = todasAsUsinasGlobal.filter(p => p.marca === marca);
-        }
-
-        if (usinasFiltradas.length > 0) {
-            renderizarPlantas(usinasFiltradas);
-        } else {
-            const container = document.getElementById('container-plantas');
-            container.innerHTML = `<div class="loading-state"><p>Nenhuma usina encontrada para o fabricante ${marca}.</p></div>`;
-            
-            document.getElementById('count-online').textContent = '0';
-            document.getElementById('count-offline').textContent = '0';
-            document.getElementById('count-falha').textContent = '0';
-        }
-    }
-
-    // ==========================================
-    // MODO TELA CHEIA (TV/MONITOR)
-    // ==========================================
-    function toggleFullScreen() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(err => {
-                console.error(`Erro ao tentar modo tela cheia: ${err.message}`);
-            });
-        } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
-        }
-    }
-
-    // ==========================================
-    // ROLAGEM INFINITA AUTOMÁTICA
-    // ==========================================
-    let autoScrollInterval;
-    let isAutoScrolling = false;
-
-    function toggleAutoScroll() {
-        const list = document.getElementById('container-plantas');
-        const btn = document.getElementById('btnAutoScroll');
-        
-        if (isAutoScrolling) {
-            // Pausar
-            clearInterval(autoScrollInterval);
-            isAutoScrolling = false;
-            btn.innerHTML = '⏵'; // Ícone de Play
-            btn.style.color = '#64748B'; // Volta pra cor discreta
-        } else {
-            // Iniciar
-            isAutoScrolling = true;
-            btn.innerHTML = '⏸'; // Ícone de Pause
-            btn.style.color = '#10B981'; // Fica levemente verde/neon pra indicar que tá ativo
-            
-            autoScrollInterval = setInterval(() => {
-                if (list.scrollTop + list.clientHeight >= list.scrollHeight - 2) {
-                    list.scrollTo({ top: 0, behavior: 'smooth' });
-                    clearInterval(autoScrollInterval);
-                    setTimeout(() => {
-                        if (isAutoScrolling) {
-                            toggleAutoScroll(); 
-                            toggleAutoScroll(); 
-                        }
-                    }, 2000);
-                } else {
-                    list.scrollBy({ top: 1, behavior: 'auto' });
-                }
-            }, 45); 
-        }
-    }
-
-    // Dispara a busca de usinas quando a página abre
-    document.addEventListener("DOMContentLoaded", carregarUsinas);
-</script>
+<script src="{{ url_for('static', path='js/dashboard.js') }}?v=1"></script>
 {% endblock %}

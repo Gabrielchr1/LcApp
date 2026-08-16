@@ -1,37 +1,101 @@
+<!-- app/templates/base.html -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}AppSolar Monitor{% endblock %}</title>
+    <title>{% block title %}Dashboard - LC Energia CRM{% endblock %}</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="{{ url_for('static', path='css/base.css') }}">
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- CSS Modular via FastAPI -->
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}?v=17">
+    <!-- Removi temporariamente o components.css caso ele ainda não exista para não dar erro 404 -->
+    <link rel="stylesheet" href="{{ url_for('static', path='css/sidebar.css') }}?v=17">
+
+    <link rel="stylesheet" href="{{ url_for('static', path='css/modulos/plantas.css') }}?v=3">
     
-    {% block extra_css %}{% endblock %}
+    <!-- BLOQUEIA ANIMAÇÕES NO CARREGAMENTO -->
+    <style>
+        .preload, .preload * {
+            transition: none !important;
+        }
+    </style>
+
+    {% block head_extra %}{% endblock %}
 </head>
-<body>
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <span class="logo-icon"></span> LC Energia
-        </div>
-        <div class="navbar-menu">
-            <div class="api-status-container" title="Status da comunicação com a API (Growatt)">
-                <span class="api-indicator" id="growatt-status-dot"></span>
-                <span id="growatt-status-text" class="api-text">Conectado!</span>
+<body class="preload">
+
+    <script>
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
+    </script>
+
+    <div class="app-container">
+        
+        <!-- Importando o módulo do Sidebar -->
+        {% include "sidebar.html" %}
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="main-content">
+            
+            <div class="page-header">
+                <h2>{% block page_title %}Dashboard Geral{% endblock %}</h2> 
             </div>
 
-            <span class="user-info">Bem-vindo, Lc Energia</span>
-            <a href="#" class="btn-logout">Sair</a>
-        </div>
-    </nav>
+            <div class="content-wrapper">
+                {% block content %}
+                <div class="card">
+                    <h3>Bem-vindo ao CRM LC Energia</h3>
+                    <p>Estrutura modular configurada com sucesso. O Jinja2 fará a renderização dos módulos aqui dentro.</p>
+                </div>
+                {% endblock %}
+            </div>
+        </main>
+    </div>
 
-    <main class="main-content">
-        {% block content %}
-        {% endblock %}
-    </main>
+    <!-- JS Modular -->
+    <script src="{{ url_for('static', path='js/sidebar.js') }}?v=7"></script>
 
-    {% block extra_js %}{% endblock %}
+    {% block scripts %}{% endblock %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (themeToggleBtn && themeIcon) {
+                if (document.body.classList.contains('dark-theme')) {
+                    themeIcon.classList.replace('bx-moon', 'bx-sun');
+                }
+
+                themeToggleBtn.addEventListener('click', (e) => {
+                    e.preventDefault(); 
+                    document.body.classList.toggle('dark-theme');
+                    
+                    if (document.body.classList.contains('dark-theme')) {
+                        themeIcon.classList.replace('bx-moon', 'bx-sun');
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        themeIcon.classList.replace('bx-sun', 'bx-moon');
+                        localStorage.setItem('theme', 'light');
+                    }
+
+                    if (typeof renderizarGraficoFluxo === 'function') renderizarGraficoFluxo();
+                });
+            }
+
+            setTimeout(() => {
+                document.body.classList.remove('preload');
+            }, 100);
+        });
+    </script>
 </body>
 </html>

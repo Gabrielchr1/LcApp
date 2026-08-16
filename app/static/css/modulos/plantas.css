@@ -1,127 +1,250 @@
-/* plantas.css */
-
-/* --- Painel de Indicadores (Menores e mais discretos) --- */
-.dashboard-summary {
-    display: flex; 
-    gap: 15px; 
-    margin-bottom: 25px;
+/* =========================================
+   VARIÁVEIS GLOBAIS
+   ========================================= */
+:root {
+    /* Modo Claro (Padrão/Fallback) */
+    --bg-panel: #ffffff;
+    --border-subtle: rgba(0, 0, 0, 0.06);
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    
+    --status-online: #10B981;
+    --status-falha: #F59E0B;
+    --status-offline: #EF4444;
+    
+    --btn-bg: rgba(0, 0, 0, 0.03);
+    --btn-hover: rgba(0, 0, 0, 0.08);
 }
 
-.summary-card {
-    flex: 1;
+body.dark-theme {
+    /* Modo Escuro (Sincronizado perfeitamente com o Sidebar) */
+    --bg-panel: #1e293b; 
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    
+    --btn-bg: rgba(255, 255, 255, 0.03);
+    --btn-hover: rgba(255, 255, 255, 0.08);
+}
+
+/* =========================================
+   TOPBAR (Resumo + Controles)
+   ========================================= */
+.dashboard-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+/* LADO ESQUERDO - Resumo Minimalista (Pills) */
+.dashboard-summary-mini {
+    display: flex;
+    gap: 12px;
+    background: var(--btn-bg); 
+    padding: 6px;
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+}
+
+.summary-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 8px;
     background: var(--bg-panel);
     border: 1px solid var(--border-subtle);
-    border-radius: 12px;
-    padding: 15px 20px;
-    display: flex; 
-    flex-direction: column; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    font-size: 0.8rem;
+    transition: background 0.3s ease;
+}
+
+.summary-pill:hover {
+    background: var(--btn-bg);
+}
+
+.summary-pill.online { color: var(--status-online); }
+.summary-pill.falha { color: var(--status-falha); }
+.summary-pill.offline { color: var(--status-offline); }
+
+.pill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+    box-shadow: 0 0 6px currentColor;
+}
+
+.pill-label {
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.pill-value {
+    color: var(--text-main);
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-left: 4px;
+}
+
+/* LADO DIREITO - Filtros e Ações Container */
+.dashboard-actions-container {
+    display: flex;
     align-items: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    position: relative;
-    overflow: hidden;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
-/* Brilho no topo do card */
-.summary-card::before {
-    content: ''; 
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 4px;
+.dashboard-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.summary-card.online::before { background: var(--neon-green); box-shadow: 0 0 15px var(--neon-green); }
-.summary-card.falha::before { background: var(--neon-orange); box-shadow: 0 0 15px var(--neon-orange); }
-.summary-card.offline::before { background: var(--neon-red); box-shadow: 0 0 15px var(--neon-red); }
-
-.summary-value { 
-    font-size: 2rem; 
-    font-weight: 700; 
-    line-height: 1; 
-    margin-bottom: 3px;
+.filtros-marca {
+    display: flex;
+    gap: 6px;
+    background: var(--btn-bg);
+    border: 1px solid var(--border-subtle);
+    padding: 6px;
+    border-radius: 12px;
 }
 
-.summary-card.online .summary-value { color: var(--neon-green); text-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
-.summary-card.falha .summary-value { color: var(--neon-orange); text-shadow: 0 0 20px rgba(245, 158, 11, 0.3); }
-.summary-card.offline .summary-value { color: var(--neon-red); text-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
-
-.summary-label { 
-    font-size: 0.75rem; 
-    color: var(--text-muted); 
-    text-transform: uppercase; 
-    letter-spacing: 1px; 
-    font-weight: 600;
+.btn-filtro {
+    border: 1px solid transparent;
+    background: transparent;
+    padding: 6px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 400;
+    color: var(--text-muted);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.85rem;
+    font-family: 'Poppins', sans-serif;
 }
 
-/* --- Container da Lista --- */
+.btn-filtro:hover {
+    color: var(--text-main);
+}
+
+.btn-filtro.active {
+    background: var(--bg-panel);
+    color: var(--text-main);
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    font-weight: 500;
+}
+
+/* Botões Menores (Play, Tela Cheia, Config) */
+.btn-config {
+    border: 1px solid transparent;
+    background: var(--btn-bg);
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-config:hover {
+    background: var(--btn-hover);
+    color: var(--text-main);
+    border-color: var(--border-subtle);
+}
+
+/* Botão Atualizar */
+.btn-atualizar {
+    background: transparent;
+    color: var(--text-main);
+    border: 1px solid var(--border-subtle);
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-weight: 400;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-atualizar i {
+    font-size: 1.1rem;
+}
+
+.btn-atualizar:hover {
+    background: var(--btn-hover);
+    border-color: var(--text-muted);
+}
+
+/* =========================================
+   LISTA DE USINAS
+   ========================================= */
+/* =========================================
+   LISTA DE USINAS
+   ========================================= */
 .list-container {
     background: var(--bg-panel);
     border: 1px solid var(--border-subtle);
-    border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
     overflow: hidden; 
     position: relative;
-    /* Força o container a preencher exatamente o espaço restante da tela */
-    height: calc(100vh - 290px); 
+    /* REDUZIDO DE 290px PARA 150px PARA PREENCHER O ESPAÇO VAZIO DO RODAPÉ */
+    height: calc(100vh - 150px); 
 }
 
 .list-plantas {
-    height: 100%; /* Preenche 100% do card */
-    max-height: none; 
+    height: 100%; 
     overflow-y: auto;
     display: flex; 
     flex-direction: column;
-    
-    /* Oculta a barra de rolagem no Firefox e IE/Edge */
     scrollbar-width: none; 
     -ms-overflow-style: none; 
 }
 
-/* Oculta a barra de rolagem no Chrome/Safari/Edge/Opera completamente */
-.list-plantas::-webkit-scrollbar { 
-    display: none; 
-    width: 0px; 
-    background: transparent; 
-}
+.list-plantas::-webkit-scrollbar { display: none; }
 
-/* --- Linhas Individuais (Usinas) - Layout CSS Grid --- */
 .row-planta {
     display: flex; 
     align-items: center; 
     justify-content: space-between;
-    padding: 16px 24px;
+    /* PADDING COMPACTADO DE 20px PARA 12px PARA CABER MAIS LINHAS */
+    padding: 12px 20px;
     border-bottom: 1px solid var(--border-subtle);
-    transition: background 0.3s;
-    gap: 20px;
+    transition: background 0.2s ease;
+    gap: 16px;
 }
 
-.row-planta:hover { background: rgba(255, 255, 255, 0.02); }
+.row-planta:hover { background: var(--btn-bg); }
 .row-planta:last-child { border-bottom: none; }
 
-/* Bloco 1: Status e Nome (Largura Fixa para manter alinhamento perfeito) */
 .planta-info { 
-    display: flex; 
-    align-items: center; 
-    gap: 15px; 
-    width: 280px; 
-    flex-shrink: 0; 
+    display: flex; align-items: center; gap: 12px; 
+    width: 250px; flex-shrink: 0; /* Levemente reduzido */
 }
 
 .planta-nome {
-    font-weight: 600; 
+    font-weight: 500; 
     color: var(--text-main); 
-    font-size: 1.05rem;
-    white-space: nowrap; 
-    overflow: hidden; 
-    text-overflow: ellipsis;
+    font-size: 0.9rem; /* Compactado */
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
-/* Bloco 2: Detalhes com CSS Grid para alinhamento perfeito tipo tabela */
 .planta-detalhes {
     display: grid; 
-    grid-template-columns: 1fr 1fr 1fr 1fr 1.5fr; 
-    gap: 20px; 
+    grid-template-columns: repeat(4, 1fr) 1.5fr; 
+    gap: 16px; 
     flex: 1; 
     align-items: center;
 }
@@ -129,97 +252,141 @@
 .planta-detalhes span { display: flex; flex-direction: column; }
 
 .detalhe-label { 
-    font-size: 0.7rem; 
+    font-size: 0.6rem; /* Mais sutil */
     text-transform: uppercase; 
     letter-spacing: 1px; 
-    color: #94A3B8; 
-    margin-bottom: 4px;
+    color: var(--text-muted); 
+    margin-bottom: 2px; 
+    font-weight: 400;
 }
 
 .detalhe-valor { 
-    font-weight: 600; 
-    color: #F8FAFC; 
-    font-size: 1.05rem; 
+    font-weight: 500; 
+    color: var(--text-main); 
+    font-size: 0.9rem; /* Mais delicado */
 }
 
-/* Classes de destaque visual adicionadas via JS */
-.valor-destaque-azul {
-    color: #60A5FA;
-    text-shadow: 0 0 12px rgba(96, 165, 250, 0.3);
+/* Nova classe transferida do JS para o Local */
+.detalhe-local-container {
+    overflow: hidden;
 }
 
-.valor-destaque-verde {
-    color: #34D399;
-    text-shadow: 0 0 12px rgba(52, 211, 153, 0.2);
+.detalhe-local {
+    font-size: 0.8rem; 
+    color: var(--text-muted); 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
 }
 
-.valor-unidade {
-    font-size: 0.75rem; 
-    color: #64748B;
-    font-weight: 500;
+.valor-destaque-azul { color: #60A5FA; }
+.valor-destaque-verde { color: #34D399; }
+
+.valor-unidade { 
+    font-size: 0.65rem; 
+    color: var(--text-muted); 
+    font-weight: 400; 
+    margin-left: 2px;
 }
 
-/* Bloco 3: Botão de ação alinhado no final */
 .planta-acao {
     display: flex;
     justify-content: flex-end;
     flex-shrink: 0;
 }
 
-/* --- Status Minimalista Premium --- */
+/* =========================================
+   STATUS
+   ========================================= */
 .status-dot {
-    width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 10px;
+    width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 8px;
 }
 
 .badge-status {
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.75rem; font-weight: 600; padding: 6px 12px;
-    border-radius: 20px; width: 110px; letter-spacing: 0.5px; flex-shrink: 0;
+    font-size: 0.65rem; font-weight: 500; 
+    padding: 4px 10px; /* Badges menores */
+    border-radius: 20px; width: 85px; letter-spacing: 0.5px; flex-shrink: 0;
+    background: transparent;
+    border: 1px solid var(--border-subtle);
+    color: var(--text-main);
 }
 
-/* Badges com fundo transparente e borda iluminada (Estilo Cyberpunk/Moderno) */
-.status-online { 
-    color: var(--neon-green); 
-    background: rgba(16, 185, 129, 0.1); 
-    border: 1px solid rgba(16, 185, 129, 0.3);
-}
-.status-online .status-dot { background-color: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); }
+.status-online .status-dot { background-color: var(--status-online); box-shadow: 0 0 6px rgba(16, 185, 129, 0.4); }
+.status-offline .status-dot { background-color: var(--status-offline); }
+.status-falha .status-dot { background-color: var(--status-falha); }
 
-.status-offline { 
-    color: var(--neon-red); 
-    background: rgba(239, 68, 68, 0.1); 
-    border: 1px solid rgba(239, 68, 68, 0.3);
-}
-.status-offline .status-dot { background-color: var(--neon-red); box-shadow: 0 0 10px var(--neon-red); animation: pulse-dot 2s infinite; }
-
-.status-falha { 
-    color: var(--neon-orange); 
-    background: rgba(245, 158, 11, 0.1); 
-    border: 1px solid rgba(245, 158, 11, 0.3);
-}
-.status-falha .status-dot { background-color: var(--neon-orange); box-shadow: 0 0 10px var(--neon-orange); }
-
-@keyframes pulse-dot {
-    0% { opacity: 1; }
-    50% { opacity: 0.2; }
-    100% { opacity: 1; }
+/* =========================================
+   BOTÃO DA LINHA (AÇÕES)
+   ========================================= */
+.btn-acao {
+    padding: 6px 14px; /* Botão mais baixo e discreto */
+    background: transparent;
+    color: var(--text-main);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 400;
+    font-size: 0.75rem;
+    transition: all 0.3s ease;
+    white-space: nowrap;
 }
 
-/* --- Botão de Ação --- */
+.btn-acao:hover {
+    background: var(--btn-hover);
+    border-color: var(--text-muted);
+}
+
+.loading-state, .error-state {
+    padding: 60px 20px; 
+    text-align: center; 
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 300;
+}
+
+/* =========================================
+   BOTÃO DA LINHA (AÇÕES)
+   ========================================= */
 .btn-acao {
     padding: 8px 16px;
     background: transparent;
     color: var(--text-main);
     border: 1px solid var(--border-subtle);
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
-    font-weight: 500;
-    font-size: 0.85rem;
-    transition: all 0.3s;
+    font-weight: 400;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
     white-space: nowrap;
 }
 
 .btn-acao:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: #94A3B8;
+    background: var(--btn-hover);
+    border-color: var(--text-muted);
+}
+
+.loading-state, .error-state {
+    padding: 60px 20px; 
+    text-align: center; 
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 300;
+}
+
+/* =========================================
+   OCULTAR BARRAS DE ROLAGEM GLOBAIS
+   ========================================= */
+
+/* Oculta em navegadores baseados em WebKit (Chrome, Edge, Safari, Opera) */
+::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    background: transparent !important;
+}
+
+/* Oculta no Firefox e IE/Edge legado */
+* {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
 }

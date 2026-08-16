@@ -1,0 +1,91 @@
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-brand logo-text">
+            Usina Pro MAX
+        </div>
+        <button id="toggle-btn" class="toggle-btn" aria-label="Toggle Sidebar">
+            <i class='bx bx-chevron-left'></i>
+        </button>
+    </div>
+
+    <ul class="sidebar-nav">
+        <!-- NOVO PAINEL DE DASHBOARD ADICIONADO AQUI -->
+        <li class="nav-title">Painel</li>
+        <li class="nav-item">
+            <a href="/" class="nav-link">
+                <i class='bx bx-grid-alt nav-icon'></i>
+                <span class="nav-text">Dashboard</span>
+            </a>
+        </li>
+
+        <li class="nav-title">Administração</li>
+        <li class="nav-item">
+            <a href="#" class="nav-link has-submenu">
+                <i class='bx bx-line-chart nav-icon'></i>
+                <span class="nav-text">Financeiro</span>
+                <i class='bx bx-chevron-down arrow-icon'></i>
+            </a>
+            <ul class="submenu">
+                <li><a href="#" class="submenu-link"><span class="submenu-bullet"></span> Dashboard</a></li>
+                <li><a href="#" class="submenu-link"><span class="submenu-bullet"></span> Contas a pagar</a></li>
+                <li><a href="#" class="submenu-link"><span class="submenu-bullet"></span> Contas a receber</a></li>
+                <li><a href="#" class="submenu-link"><span class="submenu-bullet"></span> Categorias</a></li>
+            </ul>
+        </li>
+
+        <li class="nav-title">Gestão</li>
+        <li class="nav-item">
+            <a href="#" class="nav-link has-submenu">
+                <i class='bx bx-user nav-icon'></i>
+                <span class="nav-text">Cadastros</span>
+                <i class='bx bx-chevron-down arrow-icon'></i>
+            </a>
+            <ul class="submenu">
+                <li><a href="/clientes" class="submenu-link"><span class="submenu-bullet"></span> Clientes</a></li>
+                <li><a href="#" class="submenu-link"><span class="submenu-bullet"></span> Fornecedores</a></li>
+                <li><a href="#" class="submenu-link"><span class="submenu-bullet"></span> Contas Bancárias</a></li>
+            </ul>
+        </li>
+
+        <li class="nav-title">Integrações</li>
+        <li class="nav-item">
+            <a href="#" class="nav-link has-submenu">
+                <i class='bx bx-building-house nav-icon'></i> 
+                <span class="nav-text">Bancos</span>
+                <i class='bx bx-chevron-down arrow-icon'></i>
+            </a>
+            <ul class="submenu">
+                <li><a href="#" class="submenu-link"><span class="submenu-bullet"></span> EM BREVE!</a></li>
+            </ul>
+        </li>
+        
+        <li class="nav-title">Sistema</li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class='bx bx-buildings nav-icon'></i>
+                <span class="nav-text">Empresas</span>
+            </a>
+        </li>
+    </ul>
+
+    <!-- Rodapé do Sidebar com Perfil, Tema e Logout -->
+    <div class="sidebar-footer">
+        <div class="user-profile">
+            <div class="avatar">LC</div>
+            <div class="user-details">
+                <span class="user-name">Gabriel</span>
+                <span class="user-role">Administrador</span>
+            </div>
+        </div>
+        
+        <!-- Agrupamento das ações do rodapé -->
+        <div style="display: flex; align-items: center; gap: 4px;">
+            <button id="theme-toggle" class="logout-btn" title="Alternar Tema" style="background: transparent; border: none; padding: 8px; cursor: pointer;">
+                <i class='bx bx-moon' id="theme-icon"></i>
+            </button>
+            <a href="#" class="logout-btn" title="Sair do Sistema">
+                <i class='bx bx-log-out'></i>
+            </a>
+        </div>
+    </div>
+</aside>

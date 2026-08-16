@@ -20,6 +20,11 @@ from app.modulos.empresas.models import Empresa, CredencialAPI
 
 from app.modulos.apis.sungrow.models import SungrowConfig
 from app.modulos.apis.solis.models import SolisConfig
+from app.modulos.apis.saj.models import SajConfig # <--- NOVO: Model da SAJ no Alembic
+
+from app.modulos.apis.deye.models import DeyeConfig
+
+from app.modulos.clientes.models import Cliente
 
 from app.modulos.apis.models import CacheAPI
 

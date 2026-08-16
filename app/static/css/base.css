@@ -34,7 +34,7 @@ body {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border-subtle);
-    padding: 10px 25px; /* Reduzido */
+    padding: 10px 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -45,7 +45,7 @@ body {
 }
 
 .navbar-brand { 
-    font-size: 1.1rem; /* Reduzido */ 
+    font-size: 1.1rem; 
     font-weight: 700; 
     display: flex; 
     align-items: center; 
@@ -56,7 +56,7 @@ body {
     -webkit-text-fill-color: transparent; 
 }
 
-.logo-icon { font-size: 1.2rem; } /* Reduzido */
+.logo-icon { font-size: 1.2rem; }
 
 .navbar-menu { display: flex; align-items: center; gap: 15px; }
 
@@ -70,18 +70,18 @@ body {
     background-color: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--border-subtle);
     border-radius: 30px;
-    padding: 4px 12px; /* Reduzido */
+    padding: 4px 12px;
 }
 
 .api-text { 
-    font-size: 0.75rem; /* Reduzido */ 
+    font-size: 0.75rem; 
     font-weight: 600; 
     color: var(--text-muted); 
     letter-spacing: 0.5px;
 }
 
 .api-indicator {
-    width: 10px; height: 10px; border-radius: 50%;
+    width: 100%; height: 10px; border-radius: 50%;
     background-color: #a6ff00; transition: all 0.4s ease;
 }
 
@@ -105,8 +105,8 @@ body {
 .btn-logout {
     color: var(--text-muted);
     text-decoration: none;
-    font-size: 0.8rem; /* Reduzido */
-    padding: 5px 12px; /* Reduzido */
+    font-size: 0.8rem;
+    padding: 5px 12px;
     border: 1px solid var(--border-subtle);
     border-radius: 6px;
     transition: all 0.3s;
@@ -119,58 +119,7 @@ body {
 
 /* --- Área Principal (Largura total da tela) --- */
 .main-content {
-    max-width: 98%; /* Ocupa quase toda a tela */
+    max-width: 98%;
     margin: 0 auto;
-    padding: 20px 10px; /* Reduzido */
-}
-
-/* --- Cabeçalho do Dashboard --- */
-.dashboard-header {
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center;
-    margin-bottom: 20px; /* Reduzido */
-}
-
-.dashboard-header h2 {
-    font-size: 1.3rem; /* Reduzido */
-    font-weight: 600;
-    color: var(--text-main);
-    letter-spacing: -0.5px;
-}
-
-.btn-atualizar {
-    background-color: rgba(255, 255, 255, 0.05); /* Fundo de vidro escuro */
-    color: var(--text-main);
-    border: 1px solid var(--border-subtle);
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-weight: 500;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex; 
-    align-items: center; 
-    gap: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra preta suave, sem azul */
-}
-
-.btn-atualizar:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.25);
-    transform: translateY(-1px);
-}
-
-/* Estados de Carregamento e Erro */
-.loading-state, .error-state { 
-    text-align: center; 
-    padding: 60px; 
-    color: var(--text-muted); 
-}
-
-.error-state { 
-    color: #FCA5A5; 
-    background: rgba(239, 68, 68, 0.05); 
-    border-radius: 12px; 
-    border: 1px solid rgba(239, 68, 68, 0.2); 
+    padding: 20px 10px;
 }

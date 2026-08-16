@@ -21,7 +21,6 @@ function renderizarPlantas(plantas) {
         const configStatus = obterStatusConfig(planta.status);
         contadores[configStatus.tipo]++;
 
-        // Formatação com a classe .valor-unidade para diminuir a importância do "kW" e focar no número
         const potAtual = planta.current_power !== undefined 
             ? `${planta.current_power} <span class="valor-unidade">${planta.current_power_unit || 'kW'}</span>` 
             : '-';
@@ -48,17 +47,17 @@ function renderizarPlantas(plantas) {
 
             <div class="planta-detalhes">
                 <span>
-                    <span class="detalhe-label">Pot. Atual</span>
+                    <span class="detalhe-label">Potência</span>
                     <span class="detalhe-valor valor-destaque-azul">${potAtual}</span>
                 </span>
                 
                 <span>
-                    <span class="detalhe-label">Ger. Hoje</span>
+                    <span class="detalhe-label">Hoje</span>
                     <span class="detalhe-valor valor-destaque-verde">${geracaoHoje}</span>
                 </span>
                 
                 <span>
-                    <span class="detalhe-label">Ger. Total</span>
+                    <span class="detalhe-label">Total</span>
                     <span class="detalhe-valor">${planta.total_energy || 0} <span class="valor-unidade">kWh</span></span>
                 </span>
                 
@@ -67,16 +66,15 @@ function renderizarPlantas(plantas) {
                     <span class="detalhe-valor">${planta.peak_power || 0} <span class="valor-unidade">kWp</span></span>
                 </span>
                 
-                <span style="overflow: hidden;">
+                <span class="detalhe-local-container">
                     <span class="detalhe-label">Local</span>
-                    <span class="detalhe-valor" style="font-size: 0.85rem; color: #CBD5E1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${local}">
+                    <span class="detalhe-valor detalhe-local" title="${local}">
                         ${local}
                     </span>
                 </span>
             </div>
 
             <div class="planta-acao">
-                <!-- Adicionado o parâmetro da marca no clique -->
                 <button class="btn-acao" onclick="abrirDetalhesPlanta('${planta.plant_id}', '${planta.marca}')">
                     Equipamentos
                 </button>
@@ -86,12 +84,12 @@ function renderizarPlantas(plantas) {
         container.appendChild(row);
     });
 
+    // Atualiza os novos IDs dos pills na topbar
     document.getElementById('count-online').textContent = contadores.online;
     document.getElementById('count-offline').textContent = contadores.offline;
     document.getElementById('count-falha').textContent = contadores.falha;
 }
 
-// Atualizada para receber e repassar a marca na URL
 function abrirDetalhesPlanta(plantId, marca) {
     window.location.href = `/dashboard/plantas/${marca.toLowerCase()}/${plantId}`;
 }

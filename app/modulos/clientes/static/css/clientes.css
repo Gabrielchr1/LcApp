@@ -1,0 +1,243 @@
+/* ==========================================
+   1. CABEÇALHO E BOTÕES
+   ========================================== */
+.card-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.btn-primary {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s ease;
+}
+.btn-primary:hover { background-color: #2563eb; }
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--text-gray);
+    border: 1px solid var(--border-color);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+.btn-secondary:hover { background-color: var(--hover-bg); }
+
+/* Botão Minimalista (+ Novo Cliente) */
+.btn-minimal {
+    background-color: transparent;
+    color: var(--text-dark);
+    border: 1px solid var(--border-color);
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+.btn-minimal i {
+    color: var(--text-gray);
+    font-size: 16px;
+    transition: color 0.2s ease;
+}
+.btn-minimal:hover {
+    background-color: var(--hover-bg);
+    border-color: var(--text-gray);
+}
+.btn-minimal:hover i {
+    color: var(--text-dark);
+}
+
+/* ==========================================
+   2. TABELAS, BADGES E AÇÕES
+   ========================================== */
+.table-responsive { width: 100%; overflow-x: auto; }
+.data-table { width: 100%; border-collapse: collapse; text-align: left; }
+.data-table th { 
+    padding: 12px 16px; 
+    border-bottom: 2px solid var(--border-color); 
+    color: var(--text-gray); 
+    font-weight: 600; 
+    font-size: 14px;
+}
+.data-table td { 
+    padding: 14px 16px; 
+    border-bottom: 1px solid var(--border-color); 
+    font-size: 14px;
+    color: var(--text-dark);
+}
+.data-table tbody tr { transition: background-color 0.2s ease; }
+.data-table tbody tr:hover { background-color: var(--hover-bg); }
+
+.badge-ativo { background: rgba(34, 197, 94, 0.15); color: #22c55e; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;}
+.badge-inativo { background: rgba(239, 68, 68, 0.15); color: #ef4444; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;}
+
+/* Botões de Ação na Tabela (Editar/Excluir/Faturas) */
+.action-group { display: flex; gap: 6px; justify-content: flex-end; }
+.btn-icon { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-gray); width: 32px; height: 32px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.btn-icon:hover { background: var(--hover-bg); transform: translateY(-2px); }
+.btn-icon.edit:hover { color: #3b82f6; border-color: #3b82f6; }
+.btn-icon.delete:hover { color: #ef4444; border-color: #ef4444; }
+
+/* Aviso de Atraso na Tabela */
+.text-danger { color: #ef4444; font-weight: 500; font-size: 11.5px; display: flex; align-items: center; gap: 4px; margin-top: 4px;}
+
+
+
+/* ==========================================
+   3. MODAL GERAL E MENSAGENS
+   ========================================== */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: var(--modal-overlay);
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0; pointer-events: none; z-index: 1000;
+    transition: opacity 0.3s ease;
+}
+.modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+.modal-content {
+    background: var(--card-bg);
+    width: 90%; max-width: 500px;
+    border-radius: var(--radius-float);
+    box-shadow: var(--shadow-float);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+    border: 1px solid var(--border-color);
+    
+    /* NOVO: Limita altura e usa flex para rolar apenas o body */
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+.modal-overlay.active .modal-content { transform: translateY(0); }
+
+/* NOVO: Impede que cabeçalho e rodapé encolham quando a tabela cresce */
+.modal-header, .modal-footer {
+    flex-shrink: 0;
+}
+
+.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--border-color); }
+.modal-header h2 { font-size: 18px; color: var(--text-dark); }
+.btn-close { background: none; border: none; font-size: 24px; color: var(--text-gray); cursor: pointer; transition: color 0.2s; }
+.btn-close:hover { color: #ef4444; }
+
+.modal-body { 
+    padding: 24px; 
+    /* NOVO: Permite rolagem no conteúdo do modal */
+    overflow-y: auto; 
+}
+
+/* ==========================================
+   BARRA DE ROLAGEM DO MODAL
+   ========================================== */
+.modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+.modal-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+.modal-body::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 10px;
+}
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: var(--text-gray);
+}
+
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--text-gray); }
+.form-group input { 
+    width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); 
+    border-radius: 8px; background: var(--input-bg); color: var(--text-dark); 
+    outline: none; transition: border-color 0.2s;
+}
+.form-group input:focus { border-color: #3b82f6; }
+
+.modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 12px; }
+
+/* Box de mensagens */
+.result-box { padding: 10px; border-radius: 6px; font-size: 13px; margin-top: 10px;}
+.result-box.error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+.result-box.success { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+body.dark-theme .result-box.error { background: rgba(239, 68, 68, 0.1); color: #fca5a5; border-color: rgba(239, 68, 68, 0.2); }
+body.dark-theme .result-box.success { background: rgba(34, 197, 94, 0.1); color: #86efac; border-color: rgba(34, 197, 94, 0.2); }
+
+
+
+
+
+/* ==========================================
+   4. MODAL GIGANTE (GRID, VIA CEP E TOGGLE)
+   ========================================== */
+/* NOVO: Modal Extra Largo (Ideal para não espremer tabelas) */
+.modal-xl { max-width: 1200px !important; width: 99%; }
+.modal-grid { display: flex; flex-wrap: wrap; gap: 24px; }
+
+
+/* NOVO: Modal Super Largo de 1440px (Cadastro/Edição) */
+.modal-xxl { max-width: 1440px !important; width: 95%; }
+
+
+
+
+.form-section { 
+    flex: 1; 
+    min-width: 300px; 
+    background: rgba(0,0,0,0.02); 
+    padding: 16px; 
+    border-radius: 12px; 
+    border: 1px solid var(--border-color); 
+}
+body.dark-theme .form-section { background: rgba(255,255,255,0.02); }
+.form-section.full-width { flex: 100%; }
+.form-section h4 { display: flex; align-items: center; gap: 8px; color: var(--text-dark); margin-bottom: 16px; font-size: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
+
+.form-row { display: flex; gap: 12px; }
+.form-row .half { flex: 1; }
+
+/* Toggle Switch (Animação CPF/CNPJ) */
+.toggle-container { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px; background: var(--hover-bg); padding: 10px; border-radius: 8px; }
+.toggle-label { font-size: 13px; font-weight: 500; color: var(--text-gray); transition: color 0.3s; }
+.switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #3b82f6; transition: .4s; border-radius: 24px; }
+.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: #8b5cf6; } 
+input:checked + .slider:before { transform: translateX(20px); }
+
+
+/* ==========================================
+   5. KPIs HEADER E FINANCEIRO
+   ========================================== */
+.kpi-container { display: flex; gap: 12px; align-items: center; }
+.kpi-card { background: var(--input-bg); border: 1px solid var(--border-color); padding: 10px 16px; border-radius: 8px; display: flex; flex-direction: column; min-width: 120px; }
+.kpi-label { font-size: 11px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; }
+.kpi-value { font-size: 16px; color: var(--text-dark); font-weight: 700; margin-top: 4px; }
+.kpi-value.success { color: #22c55e; }
+.kpi-value.danger { color: #ef4444; }
+
+/* Badges Financeiros */
+.badge-pago { background: rgba(34, 197, 94, 0.15); color: #22c55e; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;}
+.badge-pendente { background: rgba(245, 158, 11, 0.15); color: #f59e0b; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;}
+.badge-atrasado { background: rgba(239, 68, 68, 0.15); color: #ef4444; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;}
+
+/* Botão de Pagamento Verde */
+.btn-pay { background: #22c55e; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500; display: inline-flex; align-items: center; gap: 4px; transition: 0.2s; }
+.btn-pay:hover { background: #16a34a; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(34, 197, 94, 0.2); }
+.btn-pay:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }

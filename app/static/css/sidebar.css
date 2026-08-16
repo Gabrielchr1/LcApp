@@ -1,0 +1,305 @@
+:root {
+    /* Variáveis exclusivas do Sidebar */
+    --sidebar-width: 280px;
+    --sidebar-collapsed-width: 88px;
+    
+    /* Cores de Alto Contraste para Fundo Escuro */
+    --text-light: #f8fafc; 
+    --text-muted: #94a3b8; 
+    
+    --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    height: calc(100vh - 32px); /* Altura total menos as margens */
+    margin: 16px 0 16px 16px; /* Descola do topo, baixo e esquerda */
+    border-radius: 20px; /* Cantos arredondados (efeito flutuante) */
+    
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    transition: width var(--transition-smooth);
+    z-index: 10;
+    box-shadow: 8px 8px 32px rgba(0, 0, 0, 0.15); /* Sombra mais suave para flutuar */
+    overflow: hidden; /* Importante para o noise background não vazar o border-radius */
+}
+
+.sidebar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.12;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.sidebar > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Cabeçalho do Sidebar */
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 32px 24px;
+    margin-bottom: 8px;
+}
+
+.sidebar-brand {
+    font-size: 20px;
+    font-weight: 500; /* Mais fino e elegante */
+    color: var(--text-light);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: opacity var(--transition-smooth);
+}
+
+/* Botão Minimalista */
+.toggle-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    transition: all 0.2s ease;
+}
+
+.toggle-btn:hover {
+    color: var(--text-light);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.toggle-btn i {
+    transition: transform var(--transition-smooth);
+}
+
+/* Navegação e Listas */
+.sidebar-nav {
+    flex: 1;
+    padding: 0 16px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-nav::-webkit-scrollbar { display: none; }
+.sidebar-nav { -ms-overflow-style: none; scrollbar-width: none; }
+
+.nav-title {
+    color: var(--text-muted);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin: 24px 0 8px 12px;
+    font-weight: 500; /* Mais fino */
+    white-space: nowrap;
+    transition: opacity var(--transition-smooth);
+    opacity: 0.7;
+}
+
+.nav-item {
+    margin-bottom: 4px;
+}
+
+/* Links do Menu Base */
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-radius: 12px; /* Arredondamento mais suave */
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-link:hover {
+    color: var(--text-light);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-icon {
+    font-size: 20px; /* Levemente menor para combinar com a fonte fina */
+    min-width: 28px;
+    text-align: center;
+}
+
+.nav-text {
+    margin-left: 12px;
+    font-size: 13.5px;
+    font-weight: 400; /* Fonte normal/fina */
+    flex-grow: 1;
+    white-space: nowrap;
+    transition: opacity var(--transition-smooth), max-width var(--transition-smooth), margin var(--transition-smooth);
+}
+
+/* Setas e Submenus */
+.arrow-icon {
+    font-size: 16px;
+    transition: transform var(--transition-smooth);
+}
+
+.has-submenu.open .arrow-icon {
+    transform: rotate(180deg);
+}
+
+.has-submenu.open {
+    color: var(--text-light);
+}
+
+.submenu {
+    list-style: none;
+    padding-left: 44px;
+    overflow: hidden;
+    max-height: 0; 
+    transition: max-height var(--transition-smooth);
+}
+
+.submenu.open {
+    max-height: 400px;
+}
+
+.submenu-link {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 300; /* Super fino nos submenus */
+    transition: color 0.2s ease;
+}
+
+.submenu-link:hover {
+    color: var(--text-light);
+}
+
+.submenu-bullet {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    margin-right: 12px;
+    transition: all 0.2s ease;
+}
+
+.submenu-link:hover .submenu-bullet {
+    background: var(--text-light);
+    transform: scale(1.5); /* Efeito sutil ao invés de brilho neon */
+}
+
+/* =========================================
+   ESTADO RECOLHIDO (COLLAPSED)
+   ========================================= */
+.sidebar.collapsed { width: var(--sidebar-collapsed-width); }
+.sidebar.collapsed .sidebar-brand { opacity: 0; width: 0; display: none; }
+.sidebar.collapsed .sidebar-header { flex-direction: column; gap: 20px; padding: 24px 16px; }
+.sidebar.collapsed .toggle-btn i { transform: rotate(180deg); }
+.sidebar.collapsed .nav-text { max-width: 0; opacity: 0; margin-left: 0; pointer-events: none; }
+.sidebar.collapsed .nav-title { opacity: 0; margin: 0; height: 0; overflow: hidden; }
+.sidebar.collapsed .arrow-icon { display: none; }
+.sidebar.collapsed .submenu { display: none !important; }
+.sidebar.collapsed .nav-link { justify-content: center; padding: 14px 0; }
+.sidebar.collapsed .nav-icon { margin: 0; }
+
+
+
+/* =========================================
+   RODAPÉ DO SIDEBAR (PERFIL E LOGOUT)
+   ========================================= */
+.sidebar-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: auto; /* Empurra o rodapé para o final da tela */
+    background: rgba(0, 0, 0, 0.1); /* Dá uma leve separada visual do menu */
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow: hidden;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px; /* Mais quadrado combinando com o minimalismo */
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    white-space: nowrap;
+    transition: opacity var(--transition-smooth);
+}
+
+.user-name {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-light);
+}
+
+.user-role {
+    font-size: 11px;
+    font-weight: 300;
+    color: var(--text-muted);
+}
+
+.logout-btn {
+    color: var(--text-muted);
+    font-size: 22px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.logout-btn:hover {
+    color: #ef4444; /* Vermelho sutil para indicar saída */
+    transform: scale(1.1);
+}
+
+/* Ajustes do rodapé no modo encolhido */
+.sidebar.collapsed .sidebar-footer {
+    padding: 20px 0;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+}
+.sidebar.collapsed .user-details {
+    display: none;
+}
+.sidebar.collapsed .user-profile {
+    gap: 0;
+}

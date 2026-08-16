@@ -2,152 +2,8 @@
 
 {% block title %}Configurações de API - AppSolar{% endblock %}
 
-{% block extra_css %}
-<style>
-    /* Container principal em Grid */
-    .config-wrapper {
-        max-width: 1200px;
-        margin: 20px auto;
-        padding: 0 20px;
-    }
-
-    .page-title {
-        text-align: center;
-        margin-bottom: 40px;
-        color: #1E293B;
-    }
-
-    .page-title p {
-        color: #64748B;
-        font-size: 0.95rem;
-    }
-
-    .cards-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        gap: 30px;
-        align-items: start; /* Impede que os cards estiquem se um for maior que o outro */
-    }
-
-    /* O Card Flutuante */
-    .config-card {
-        background: #ffffff;
-        padding: 30px 25px;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-        border: 1px solid #F1F5F9;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .config-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    }
-
-    /* Cabeçalhos personalizados por marca */
-    .config-header {
-        padding-bottom: 12px;
-        margin-bottom: 20px;
-    }
-
-    .header-sungrow { border-bottom: 2px solid #ea580c; }
-    .header-solis { border-bottom: 2px solid #3B82F6; }
-
-    .config-header h2 {
-        color: #1E293B;
-        margin: 0 0 5px 0;
-        font-size: 1.3rem;
-    }
-
-    .config-header p {
-        color: #64748B;
-        margin: 0;
-        font-size: 0.85rem;
-        line-height: 1.4;
-    }
-
-    /* Formulários e Inputs */
-    .form-group {
-        margin-bottom: 15px;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 6px;
-        font-weight: 600;
-        color: #475569;
-        font-size: 0.85rem;
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 10px 12px;
-        border: 1px solid #CBD5E1;
-        border-radius: 6px;
-        box-sizing: border-box;
-        font-size: 0.9rem;
-        transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .form-control:focus {
-        outline: none;
-        border-color: #94A3B8;
-        box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.1);
-    }
-
-    .input-sungrow:focus { border-color: #ea580c; box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
-    .input-solis:focus { border-color: #3B82F6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-
-    /* Botões */
-    .btn-submit {
-        color: white;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 0.95rem;
-        width: 100%;
-        font-weight: 600;
-        transition: all 0.2s;
-        margin-top: 15px;
-    }
-
-    .btn-sungrow { background-color: #ea580c; }
-    .btn-sungrow:hover { background-color: #c2410c; }
-    
-    .btn-solis { background-color: #3B82F6; }
-    .btn-solis:hover { background-color: #2563EB; }
-
-    .btn-submit:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
-
-    /* Feedbacks e Resultados */
-    .result-box {
-        margin-top: 20px;
-        padding: 12px 15px;
-        border-radius: 6px;
-        display: none;
-        font-size: 0.9rem;
-        line-height: 1.4;
-    }
-
-    .result-box.success { background-color: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; }
-    .result-box.error { background-color: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
-
-    .token-display {
-        font-family: monospace;
-        background: #F8FAFC;
-        padding: 8px 10px;
-        word-break: break-all;
-        margin-top: 8px;
-        border-radius: 4px;
-        border: 1px solid #E2E8F0;
-        color: #0F172A;
-        font-size: 0.85rem;
-    }
-</style>
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/modulos/config.css') }}?v=1">
 {% endblock %}
 
 {% block content %}
@@ -159,6 +15,27 @@
     </div>
 
     <div class="cards-grid">
+
+        <!-- CARD: GROWATT -->
+        <div class="config-card">
+            <div class="config-header header-growatt">
+                <h2>OpenAPI (Growatt)</h2>
+                <p>Insira a URL base e o Token de acesso gerado na plataforma OpenAPI.</p>
+            </div>
+
+            <form id="growattConfigForm">
+                <div class="form-group">
+                    <label for="growattApiUrl">URL da API:</label>
+                    <input type="text" id="growattApiUrl" class="form-control input-growatt" required value="https://openapi.growatt.com/v1">
+                </div>
+                <div class="form-group">
+                    <label for="growattApiToken">Token da API:</label>
+                    <input type="password" id="growattApiToken" class="form-control input-growatt" required placeholder="Token">
+                </div>
+                <button type="submit" id="btnTestarGrowatt" class="btn-submit btn-growatt">Salvar Credenciais Growatt</button>
+            </form>
+            <div id="resultMessageGrowatt" class="result-box"></div>
+        </div>
         
         <!-- CARD: SUNGROW -->
         <div class="config-card">
@@ -210,111 +87,60 @@
             <div id="resultMessageSolis" class="result-box"></div>
         </div>
 
-        <!-- Futuras marcas podem ser adicionadas aqui como novos <div class="config-card"> -->
+        <!-- CARD: SAJ -->
+        <div class="config-card">
+            <div class="config-header header-saj">
+                <h2>SAJ API</h2>
+                <p>Insira o App ID e App Secret gerados na plataforma de desenvolvedor da SAJ.</p>
+            </div>
+
+            <form id="sajConfigForm">
+                <div class="form-group">
+                    <label for="sajAppId">App ID:</label>
+                    <input type="text" id="sajAppId" class="form-control input-saj" required placeholder="Ex: VH_GiQz6CMd">
+                </div>
+                <div class="form-group">
+                    <label for="sajAppSecret">App Secret:</label>
+                    <input type="password" id="sajAppSecret" class="form-control input-saj" required placeholder="Seu App Secret da SAJ">
+                </div>
+                <button type="submit" id="btnTestarSaj" class="btn-submit btn-saj">Salvar Credenciais SAJ</button>
+            </form>
+            <div id="resultMessageSaj" class="result-box"></div>
+        </div>
+
+        <!-- CARD: DEYE -->
+        <div class="config-card">
+            <div class="config-header header-deye">
+                <h2>DeyeCloud API</h2>
+                <p>Insira as credenciais do App OpenAPI e da sua conta DeyeCloud.</p>
+            </div>
+
+            <form id="deyeConfigForm">
+                <div class="form-group">
+                    <label for="deyeAppId">App ID:</label>
+                    <input type="text" id="deyeAppId" class="form-control input-deye" required placeholder="Ex: 202406270000000">
+                </div>
+                <div class="form-group">
+                    <label for="deyeAppSecret">App Secret:</label>
+                    <input type="password" id="deyeAppSecret" class="form-control input-deye" required placeholder="Seu App Secret da Deye">
+                </div>
+                <div class="form-group">
+                    <label for="deyeEmail">E-mail (Conta Deye):</label>
+                    <input type="email" id="deyeEmail" class="form-control input-deye" required placeholder="email@exemplo.com">
+                </div>
+                <div class="form-group">
+                    <label for="deyePassword">Senha da Deye:</label>
+                    <input type="password" id="deyePassword" class="form-control input-deye" required placeholder="Sua senha de login">
+                </div>
+                <button type="submit" id="btnTestarDeye" class="btn-submit btn-deye">Salvar</button>
+            </form>
+            <div id="resultMessageDeye" class="result-box"></div>
+        </div>
 
     </div>
 </div>
 {% endblock %}
 
-{% block extra_js %}
-<script>
-    // ==========================================
-    // LÓGICA DO FORMULÁRIO DA SUNGROW
-    // ==========================================
-    document.getElementById('sungrowConfigForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const btn = document.getElementById('btnTestar');
-        const resultBox = document.getElementById('resultMessage');
-        
-        btn.textContent = "Autenticando aguarde...";
-        btn.disabled = true;
-        resultBox.style.display = "none";
-        resultBox.className = "result-box";
-
-        const payload = {
-            app_key: document.getElementById('appKey').value.trim(),
-            secret_key: document.getElementById('secretKey').value.trim(),
-            user_account: document.getElementById('userAccount').value.trim(),
-            user_password: document.getElementById('userPassword').value.trim()
-        };
-
-        try {
-            const response = await fetch('/api/sungrow/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            const data = await response.json();
-
-            if (response.ok && data.success) {
-                resultBox.classList.add('success');
-                resultBox.innerHTML = `
-                    <strong>✅ ${data.message}</strong><br>
-                    Seu Token de acesso é:
-                    <div class="token-display">${data.token}</div>
-                `;
-            } else {
-                resultBox.classList.add('error');
-                resultBox.innerHTML = `<strong>❌ Erro:</strong> ${data.message || 'Falha na autenticação.'}`;
-            }
-        } catch (error) {
-            console.error("Erro na requisição:", error);
-            resultBox.classList.add('error');
-            resultBox.innerHTML = `<strong>❌ Falha na comunicação com o servidor.</strong> Verifique o console.`;
-        } finally {
-            resultBox.style.display = "block";
-            btn.textContent = "Autenticar e Salvar";
-            btn.disabled = false;
-        }
-    });
-
-    // ==========================================
-    // LÓGICA DO FORMULÁRIO DA SOLIS
-    // ==========================================
-    document.getElementById('solisConfigForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const btn = document.getElementById('btnTestarSolis');
-        const resultBox = document.getElementById('resultMessageSolis');
-        
-        btn.textContent = "Salvando credenciais...";
-        btn.disabled = true;
-        resultBox.style.display = "none";
-        resultBox.className = "result-box"; 
-
-        const payload = {
-            api_url: "https://www.soliscloud.com:13333",
-            key_id: document.getElementById('solisKeyId').value.trim(),
-            key_secret: document.getElementById('solisKeySecret').value.trim()
-        };
-
-        try {
-            const response = await fetch('/api/solis/configurar', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            const data = await response.json();
-
-            if (response.ok && data.success) {
-                resultBox.classList.add('success');
-                resultBox.innerHTML = `<strong>✅ ${data.message}</strong>`;
-            } else {
-                resultBox.classList.add('error');
-                resultBox.innerHTML = `<strong>❌ Erro:</strong> ${data.detail || data.message || 'Falha ao salvar.'}`;
-            }
-        } catch (error) {
-            console.error("Erro na requisição Solis:", error);
-            resultBox.classList.add('error');
-            resultBox.innerHTML = `<strong>❌ Falha na comunicação com o servidor.</strong>`;
-        } finally {
-            resultBox.style.display = "block";
-            btn.textContent = "Salvar Credenciais Solis";
-            btn.disabled = false;
-        }
-    });
-</script>
+{% block scripts %}
+<script src="{{ url_for('static', path='js/config.js') }}?v=1"></script>
 {% endblock %}
